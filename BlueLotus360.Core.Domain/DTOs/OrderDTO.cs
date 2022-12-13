@@ -126,7 +126,8 @@ namespace BlueLotus360.Core.Domain.DTOs
         public DateTime InsertDate { get; set; } = DateTime.Now;
         public DateTime UpdateDate { get; set; } = DateTime.Now;
         public CodeBaseResponse AnalysisType1 { get; set; }
-        public GenericOrderItem()
+		public CodeBaseResponse AnalysisType2 { get; set; }
+		public GenericOrderItem()
         {
             OrderLineLocation = new CodeBaseResponse();
             TransactionItem = new ItemResponse();
