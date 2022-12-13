@@ -549,6 +549,12 @@ namespace BlueLotus360.Web.APIApplication.Services
         {
             return _unitOfWork.OrderRepository.GetOrderHubBU(company);
         }
+
+        public BaseServerResponse<IList<PartnerOrder>> GetAvailablePickmeOrders(Company company,RequestParameters order)
+        {
+            return _unitOfWork.OrderRepository.GetAvailablePickmeOrders(company, order);
+        }
+
         
     }
 }
