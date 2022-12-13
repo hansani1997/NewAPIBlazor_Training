@@ -19,5 +19,6 @@ namespace BlueLotus360.Core.Domain.Definitions.Repository
         BaseServerResponse<AddressMaster> CheckAdvanceAnalysisAvailability(Company company, AddressMaster addressMaster);
         BaseServerResponse<AddressMaster> CreateAdvanceAnalysis(Company company, AddressMaster addressMaster);
         BaseServerResponse<AddressResponse> GetAddressByUserKey(Company company, User user);
+        BaseServerResponse<AddressMaster> GetAddressByAdrKy(Company company, User user, AddressMaster adrmas);
     }
 }

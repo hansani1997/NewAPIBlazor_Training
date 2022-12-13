@@ -289,7 +289,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.Remarks = item.Remark;
                     lineItem.Description = item.Description;
 					lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
-                    lineItem.AnalysisType1.CodeKey = item.AnalysisType1.CodeKey;
+                    lineItem.AnalysisType2.CodeKey = item.AnalysisType2.CodeKey;
 
 					//   TotalDiscount += Math.Abs(item.GetLineDiscount()));
 					_unitOfWork.OrderRepository.CreateOrderLineItem(lineItem, company, user, new UIObject() { ObjectId = order.FormObjectKey });
@@ -624,7 +624,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.ProjectKey = (int)orderDetails.OrderProject.ProjectKey;
                     lineItem.Description = item.Description;
 					lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
-					lineItem.AnalysisType1.CodeKey = item.AnalysisType1.CodeKey;
+					lineItem.AnalysisType2.CodeKey = item.AnalysisType2.CodeKey;
 
 					_unitOfWork.OrderRepository.UpdateGenericOrderLineItem(lineItem, orderDetails.FormObjectKey, company, user);
                 }
@@ -793,7 +793,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.ResourceAddress = new AddressResponse() { AddressKey=item.ReserveAddressKey,AddressName=item.ReserveAddressID};
                     lineItem.InsertDate = item.InsertDate;
                     lineItem.UpdateDate = item.UpdateDate;
-                    lineItem.AnalysisType1 = item.AnalysisType1;
+                    lineItem.AnalysisType2 = item.AnalysisType2;
 
                     var concode  = _unitOfWork.CodeBaseRepository.GetControlConditionCode(company, user, lineItem.ObjectKey, "OrdDetAcc");
                     int controlConKy = (int)concode.Value.CodeKey;

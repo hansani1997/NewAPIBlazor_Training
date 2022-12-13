@@ -55,5 +55,10 @@ namespace BlueLotus360.Web.APIApplication.Services
             return response.Value;
         }
 
+        public AddressMaster SelectAddressByAdrKy(Company company, User user, AddressMaster adrmas)
+        {
+            var adr = _unitOfWork.AddressRepository.GetAddressByAdrKy(company,user,adrmas);
+            return adr.Value;
+        }
     }
 }

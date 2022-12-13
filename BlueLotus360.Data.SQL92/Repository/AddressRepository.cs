@@ -175,6 +175,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@NIC", addressMaster.NIC);
                     dbCommand.CreateAndAddParameter("@Email", addressMaster.Email);
                     dbCommand.CreateAndAddParameter("@AdrCat4Ky", addressMaster.Province.CodeKey);
+                    dbCommand.CreateAndAddParameter("@Address", addressMaster.PostalAddress??"");
 
                     response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
@@ -419,6 +420,70 @@ namespace BlueLotus360.Data.SQL92.Repository
                             AddressKey = reader.GetColumn<int>("AdrKy"),
                             AddressName = reader.GetColumn<string>("AdrNm"),
                         };                      
+
+                    }
+
+                    response.ExecutionEnded = DateTime.UtcNow;
+                    response.Value = address;
+
+                }
+                catch (Exception exp)
+                {
+                    throw exp;
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+                    if (reader != null && !reader.IsClosed)
+                    {
+                        reader.Close();
+                    }
+
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+                }
+                return response;
+            }
+        }
+
+        public BaseServerResponse<AddressMaster> GetAddressByAdrKy(Company company, User user,AddressMaster adrmas)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                IDataReader reader = null;
+                string SPName = "CarAdrDetailsByAdrKy_SelectWeb";
+                BaseServerResponse<AddressMaster> response = new BaseServerResponse<AddressMaster>();
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    AddressMaster address = new AddressMaster();
+                    dbCommand.CreateAndAddParameter("@Cky", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("@UsrKy", user.UserKey);
+                    dbCommand.CreateAndAddParameter("@ObjKy", adrmas.ElementKey);
+                    dbCommand.CreateAndAddParameter("@AdrKy", adrmas.AddressKey);
+
+                    response.ExecutionStarted = DateTime.UtcNow;
+                    dbCommand.Connection.Open();
+                    reader = dbCommand.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        address = new AddressMaster()
+                        {
+                            AddressKey = reader.GetColumn<int>("AdrKy"),
+                            Address = reader.GetColumn<string>("AdrNm"),
+                            AddressId= reader.GetColumn<string>("AdrID"),
+                            PostalAddress= reader.GetColumn<string>("Address"),
+                            Email= reader.GetColumn<string>("Email"),
+                            Mobile= reader.GetColumn<string>("Telephone"),
+                            NIC= reader.GetColumn<string>("NIC"),
+                        };
 
                     }
 

@@ -32,6 +32,7 @@ namespace BlueLotus360.Core.Domain.Entity.Base
         public decimal VAT { get; set; }
         public decimal SVAT { get; set; }
         public string? Mobile { get; set; }
+        public string? PostalAddress { get; set; } = "";
         public CodeBaseResponse AddressType { get; set; } = new CodeBaseResponse();
 
         //Vehicle Details
