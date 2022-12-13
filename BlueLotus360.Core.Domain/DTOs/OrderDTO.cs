@@ -137,6 +137,7 @@ namespace BlueLotus360.Core.Domain.DTOs
             Supplier=new AccountResponse();
             ResourceAddress = new AddressResponse();
             AnalysisType1 = new CodeBaseResponse();
+            AnalysisType2= new CodeBaseResponse();  
         }
 
     }
@@ -369,8 +370,8 @@ namespace BlueLotus360.Core.Domain.DTOs
 
         public CodeBaseResponse AnalysisType1 = new CodeBaseResponse();
         public CodeBaseResponse AnalysisType2 = new CodeBaseResponse();
-
-	}
+        public CodeBaseResponse AnalysisType3 = new CodeBaseResponse();
+    }
 
     public class OrderFindDto
     {
