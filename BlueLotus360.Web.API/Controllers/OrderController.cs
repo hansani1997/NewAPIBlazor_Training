@@ -58,8 +58,23 @@ namespace BlueLotus360.Web.API.Controllers
             var user = Request.GetAuthenticatedUser();
             var company = Request.GetAssignedCompany();
             var uiObject = _objectService.GetObjectByObjectKey(orderDetails.FormObjectKey);
-            var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
-            var ord = _orderService.SaveOrder(company, user, orderDetails, ordTyp.Value);
+
+            CodeBaseResponse ordTyp = new CodeBaseResponse();
+            if (!string.IsNullOrEmpty(uiObject.Value.OurCode))
+            {
+                 var ordtp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
+                 ordTyp = ordtp.Value;
+            }
+            else
+            {
+                var ordtp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, orderDetails.OrderType.OurCode, "OrdTyp");
+                ordTyp = ordtp.Value;
+            }
+            if (ordTyp==null)
+            {
+                ordTyp = new CodeBaseResponse();
+            }
+            var ord = _orderService.SaveOrder(company, user, orderDetails, ordTyp);
             OrderSaveResponse orderServerResponse = ord.Value;
             return Ok(orderServerResponse);
 
@@ -660,6 +675,15 @@ namespace BlueLotus360.Web.API.Controllers
             var company = Request.GetAssignedCompany();
             
             IList<CodeBaseResponse> items = _orderService.GetOrderHubBU(company).Value;
+            return Ok(items);
+        }
+
+        [HttpPost("GetAvailablePickmeOrders")]
+        public IActionResult GetAvailablePickmeOrders(RequestParameters request)
+        {
+            var company = Request.GetAssignedCompany();
+            
+            IList<PartnerOrder> items = _orderService.GetAvailablePickmeOrders(company, request).Value;
             return Ok(items);
         }
 

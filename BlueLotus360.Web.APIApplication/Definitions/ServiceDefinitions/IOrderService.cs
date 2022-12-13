@@ -49,5 +49,6 @@ namespace BlueLotus360.Web.APIApplication.Definitions.ServiceDefinitions
         string PostOrderHubStockResevation(int OrdKy, int OrdTypKy, Company company, User user);
         string PostOrderHubStockResevationReversal(int OrdKy, Company company, User user);
         BaseServerResponse<IList<CodeBaseResponse>> GetOrderHubBU(Company company);
+        BaseServerResponse<IList<PartnerOrder>> GetAvailablePickmeOrders(Company company, RequestParameters order);
     }
 }
