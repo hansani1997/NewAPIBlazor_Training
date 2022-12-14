@@ -153,7 +153,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                 IDataReader reader = null;
                 string SPName = "CARCusVeh_InsertWeb";
                 BaseServerResponse<AddressMaster> response = new BaseServerResponse<AddressMaster>();
-
+                
                 try
                 {
                     dbCommand.CommandType = CommandType.StoredProcedure;
@@ -162,9 +162,11 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@Cky", company.CompanyKey);
                     dbCommand.CreateAndAddParameter("@UsrKy", user.UserKey);
                     dbCommand.CreateAndAddParameter("@ObjKy", addressMaster.ElementKey);
-                    dbCommand.CreateAndAddParameter("@RegDt", addressMaster.RegistrationDate);
-                    dbCommand.CreateAndAddParameter("@RegNo", addressMaster.RegistraionNumber);
-                    dbCommand.CreateAndAddParameter("@ChassiNo", addressMaster.ChassiNumber);
+
+                    DateTime regdt = DateTime.Parse(DateTime.Now.ToString("MM/dd/yyyy"));
+                    dbCommand.CreateAndAddParameter("@RegDt", regdt);
+                    dbCommand.CreateAndAddParameter("@RegNo", addressMaster.RegistraionNumber);//not coming
+                    dbCommand.CreateAndAddParameter("@ChassiNo", addressMaster.ChassiNumber);//not coming
                     dbCommand.CreateAndAddParameter("@MakeKy", addressMaster.Make.CodeKey);
                     dbCommand.CreateAndAddParameter("@ModelKy", addressMaster.Model.CodeKey);
                     dbCommand.CreateAndAddParameter("@MakeYr", addressMaster.MakeYear);
@@ -176,6 +178,9 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@Email", addressMaster.Email);
                     dbCommand.CreateAndAddParameter("@AdrCat4Ky", addressMaster.Province.CodeKey);
                     dbCommand.CreateAndAddParameter("@Address", addressMaster.PostalAddress??"");
+                    dbCommand.CreateAndAddParameter("@VehAdrKy",BaseComboResponse.GetKeyValue(addressMaster.ExistingVehicle));
+                    dbCommand.CreateAndAddParameter("@CusAdrKy", BaseComboResponse.GetKeyValue(addressMaster.ExistingCustomer));
+                    dbCommand.CreateAndAddParameter("@Mobile", addressMaster.Mobile??"");
 
                     response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();

@@ -83,7 +83,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                 throw exp;
             }
         }
-
+        
         protected  ISQLDataLayer _dataLayer { get; private set; }
         public BaseRepository(ISQLDataLayer dataLayer)
         {
