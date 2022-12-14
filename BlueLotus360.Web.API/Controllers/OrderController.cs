@@ -678,5 +678,14 @@ namespace BlueLotus360.Web.API.Controllers
             return Ok(items);
         }
 
+        [HttpPost("GetAvailablePickmeOrders")]
+        public IActionResult GetAvailablePickmeOrders(RequestParameters request)
+        {
+            var company = Request.GetAssignedCompany();
+            
+            IList<PartnerOrder> items = _orderService.GetAvailablePickmeOrders(company, request).Value;
+            return Ok(items);
+        }
+
     }
 }

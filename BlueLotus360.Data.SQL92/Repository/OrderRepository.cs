@@ -905,7 +905,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         oorderV3.UpdateDate= reader.GetColumn<DateTime>("UpdtDt");
                         oorderV3.AnalysisType3 = new CodeBaseResponse() {CodeKey= reader.GetColumn<int>("Anl3Ky") ,CodeName= reader.GetColumn<string>("Anl3Cd")??"" };
                         oorderV3.AnalysisType2.CodeKey = reader.GetColumn<int>("Anl2Ky");
-                        oorderV3.AnalysisType2.CodeName = reader.GetColumn<string>("Anl2Nm")??"";
+                        oorderV3.AnalysisType2.Code = reader.GetColumn<string>("Anl2Cd");
 						//carmrt and principle values customer amount
 
 						itemList.Add(oorderV3);
@@ -3044,6 +3044,83 @@ namespace BlueLotus360.Data.SQL92.Repository
                 return response;
             }
 
+        }
+
+        public BaseServerResponse<IList<PartnerOrder>> GetAvailablePickmeOrders(Company company, RequestParameters order)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                IDataReader reader = null;
+                IList<PartnerOrder> orders = new List<PartnerOrder>();
+                BaseServerResponse<IList<PartnerOrder>> response = new BaseServerResponse<IList<PartnerOrder>>();
+                string SPName = "GetAvailablePickmeOrders";
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("CKy", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("LocKy", order.LocationKey);
+                    dbCommand.CreateAndAddParameter("FrmDt", order.FromDate);
+                    dbCommand.CreateAndAddParameter("ToDt", order.ToDate);
+
+                    response.ExecutionStarted = DateTime.UtcNow;
+                    dbCommand.Connection.Open();
+                    reader = dbCommand.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        PartnerOrder setPartnerOrder = new PartnerOrder();
+                        setPartnerOrder.PartnerOrderId = reader.GetColumn<long>("OrdKy");
+                        setPartnerOrder.OrderId = reader.GetColumn<string>("OrderId");
+                        setPartnerOrder.OrderReference = reader.GetColumn<string>("OrderRef");
+                        setPartnerOrder.OrderDate = reader.GetColumn<DateTime>("OrderDt").ToString("dd/MMM/yyyy hh:mm:ss tt");
+
+                        orders.Add(setPartnerOrder);
+                    }
+                    response.ExecutionEnded = DateTime.UtcNow;
+                    response.Value = orders;
+
+                    if (!reader.IsClosed)
+                    {
+                        reader.Close();
+                    }
+
+
+
+
+                }
+                catch (Exception exp)
+                {
+                    response.ExecutionEnded = DateTime.UtcNow;
+                    response.Messages.Add(new ServerResponseMessae()
+                    {
+                        MessageType = ServerResponseMessageType.Exception,
+                        Message = $"Error While Executing Proc {SPName}"
+                    });
+                    response.ExecutionException = exp;
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+                    if (reader != null)
+                    {
+                        if (!reader.IsClosed)
+                        {
+                            reader.Close();
+                        }
+                    }
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    reader.Dispose();
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+
+                }
+
+                return response;
+            }
         }
     }
 }
