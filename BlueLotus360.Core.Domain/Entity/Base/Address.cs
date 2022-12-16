@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlueLotus360.Core.Domain.Entity.UberEats;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -34,15 +35,16 @@ namespace BlueLotus360.Core.Domain.Entity.Base
         public string? Mobile { get; set; }
         public string? PostalAddress { get; set; } = "";
         public CodeBaseResponse AddressType { get; set; } = new CodeBaseResponse();
-
+        public AddressResponse ExistingCustomer { get; set; }=new AddressResponse();
         //Vehicle Details
-        public DateTime RegistrationDate { get; set; } = new DateTime();
+        public AddressResponse ExistingVehicle { get; set; } = new AddressResponse();
+        public DateTime RegistrationDate { get; set; } = DateTime.Now;
         public CodeBaseResponse Province { get; set; } = new CodeBaseResponse();
         public string? RegistraionNumber { get; set; }
         public string? ChassiNumber { get; set; }
         public CodeBaseResponse Make { get; set; } = new CodeBaseResponse();
         public CodeBaseResponse Model { get; set; } = new CodeBaseResponse();
-        public string? MakeYear { get; set; } 
+        public string? MakeYear { get; set; } = "";
         public CodeBaseResponse Category { get; set; } = new CodeBaseResponse();
         public CodeBaseResponse SubCategory { get; set; } = new CodeBaseResponse();
         public CodeBaseResponse MaintainPackage { get; set; } = new CodeBaseResponse();
