@@ -212,12 +212,13 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@ItmTaxTyp5Per", item.ItemTaxType5Per);
                     dbCommand.CreateAndAddParameter("@PrjKy", item.ProjectKey);
                     dbCommand.CreateAndAddParameter("@Anl2Ky", (int)item.AnalysisType2.CodeKey);
+					dbCommand.CreateAndAddParameter("@Anl4Ky", (int)item.AnalysisType4.CodeKey);
 
-                    //  dbCommand.CreateAndAddParameter("ItmPrpKy", item.ItemProperty1);
+					//  dbCommand.CreateAndAddParameter("ItmPrpKy", item.ItemProperty1);
 
-                    // dbCommand.CreateAndAddParameter("IsSetOff",item.)
+					// dbCommand.CreateAndAddParameter("IsSetOff",item.)
 
-                    response.ExecutionStarted = DateTime.UtcNow;
+					response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
                     reader = dbCommand.ExecuteReader();
                     while (reader.Read())
@@ -555,6 +556,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@OrgQty", item.OriginalQuantity);
                     dbCommand.CreateAndAddParameter("@PrjKy", item.ProjectKey);
 					dbCommand.CreateAndAddParameter("@Anl2Ky", (int)item.AnalysisType2.CodeKey);
+					dbCommand.CreateAndAddParameter("@Anl4Ky", (int)item.AnalysisType4.CodeKey);
 
 					response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
@@ -906,6 +908,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         oorderV3.AnalysisType3 = new CodeBaseResponse() {CodeKey= reader.GetColumn<int>("Anl3Ky") ,CodeName= reader.GetColumn<string>("Anl3Cd")??"" };
                         oorderV3.AnalysisType2.CodeKey = reader.GetColumn<int>("Anl2Ky");
                         oorderV3.AnalysisType2.Code = reader.GetColumn<string>("Anl2Cd");
+						oorderV3.AnalysisType4.CodeKey = reader.GetColumn<int>("Anl4Ky");
 						//carmrt and principle values customer amount
 
 						itemList.Add(oorderV3);
