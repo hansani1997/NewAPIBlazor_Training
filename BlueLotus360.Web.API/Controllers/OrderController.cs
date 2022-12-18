@@ -214,21 +214,34 @@ namespace BlueLotus360.Web.API.Controllers
             var company = Request.GetAssignedCompany();
             var user = Request.GetAuthenticatedUser();
             PartnerOrder codes = _orderService.GetOrdersFromOrderPlatforms(company,user, request).Value;
-            //if (codes.PartnerOrderId > 11)
-            //{
-            //    long ConfirmKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Confirm", "OrdSts").Value.CodeKey;
-            //    long CancelKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Cancel", "OrdSts").Value.CodeKey;
-            //    long RejectKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Reject", "OrdSts").Value.CodeKey;
-            //    long OrdTypKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "SLSORD", "OrdTyp").Value.CodeKey;
-            //    if (request.OrderStatus.CodeKey == ConfirmKy)
-            //    {
-            //        _orderService.PostOrderHubStockResevation(Convert.ToInt32(codes.PartnerOrderId), Convert.ToInt32(OrdTypKy), company, user);
-            //    }
-            //    else if (request.OrderStatus.CodeKey == CancelKy)
-            //    {
-            //        _orderService.PostOrderHubStockResevationReversal(Convert.ToInt32(codes.PartnerOrderId), company, user);
-            //    }
-            //}
+            if (codes.PartnerOrderId > 11)
+            {
+                long ConfirmKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Confirm", "OrdSts").Value.CodeKey;
+                long CancelKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Cancel", "OrdSts").Value.CodeKey;
+                long RejectKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Reject", "OrdSts").Value.CodeKey;
+                long OrdTypKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "SLSORD", "OrdTyp").Value.CodeKey;
+                if (company.CompanyKey == 541 && request.OrderStatus.CodeKey == ConfirmKy)
+                {
+                    StockInjection stockInjection = new StockInjection()
+                    {
+                        OrderKey =Convert.ToInt32(request.PartnerOrderId),
+                        IntegrationId = "4824fc92-10fa-4eca-a7d0-e7048892bc84",
+                        RequestId = "JKLL_TST"
+                    };
+                    StockUpdateAfterConfirmation(stockInjection);
+                }
+                else
+                {
+                    //if (request.StatusKey == ConfirmKy)
+                    //{
+                    //    _orderService.PostOrderHubStockResevation(request.OrderKey, Convert.ToInt32(OrdTypKy), company, user);
+                    //}
+                    //else if (request.StatusKey == CancelKy)
+                    //{
+                    //    _orderService.PostOrderHubStockResevationReversal(request.OrderKey, company, user);
+                    //}
+                }
+            }
             return Ok(codes);
         }
 
@@ -590,6 +603,7 @@ namespace BlueLotus360.Web.API.Controllers
                     {
                         APIName = model.Meta.User_id
                     };
+                    
                     APIInformation StoreInfo = _orderService.GetAPIDetailsByMerchantID(request).Value;
                     //1 & 2
                     if (model.Event_type == "orders.notification")
@@ -685,6 +699,15 @@ namespace BlueLotus360.Web.API.Controllers
             
             IList<PartnerOrder> items = _orderService.GetAvailablePickmeOrders(company, request).Value;
             return Ok(items);
+        }
+
+        [HttpPost("APIResponseDet_InsertWeb")]
+        public IActionResult APIResponseDet_InsertWeb(ResponseDetails request)
+        {
+            var company = Request.GetAssignedCompany();
+            request.Reference = request.Reference + company.CompanyCode;
+            bool success = _orderService.APIResponseDet_InsertWeb(request);
+            return Ok(success);
         }
 
     }

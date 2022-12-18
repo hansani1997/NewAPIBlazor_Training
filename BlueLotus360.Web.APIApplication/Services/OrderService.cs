@@ -554,7 +554,10 @@ namespace BlueLotus360.Web.APIApplication.Services
         {
             return _unitOfWork.OrderRepository.GetAvailablePickmeOrders(company, order);
         }
-
+        public bool APIResponseDet_InsertWeb(ResponseDetails request)
+        {
+            return _unitOfWork.OrderRepository.APIResponseDet_InsertWeb(request);
+        }
         
     }
 }

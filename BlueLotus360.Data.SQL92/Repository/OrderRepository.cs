@@ -3125,5 +3125,51 @@ namespace BlueLotus360.Data.SQL92.Repository
                 return response;
             }
         }
+
+        public bool APIResponseDet_InsertWeb(ResponseDetails request)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+
+                string SPName = "APIResponseDet_InsertWeb";
+
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("TriggerKy", request.TriggerKey);
+                    dbCommand.CreateAndAddParameter("ResponseCode", request.ResponseCode);
+                    dbCommand.CreateAndAddParameter("Response", request.Response);
+                    dbCommand.CreateAndAddParameter("APISubscriberKy", request.SubscriberKey);
+                    dbCommand.CreateAndAddParameter("ContentPayload", request.ContenetPayload);
+                    dbCommand.CreateAndAddParameter("Reference", request.Reference);
+                    dbCommand.CreateAndAddParameter("TrnTyp", request.TrnTyp);
+
+                    dbCommand.Connection.Open();
+                    dbCommand.ExecuteNonQuery();
+                    return true;
+
+
+                }
+                catch (Exception exp)
+                {
+                    return false;
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+                }
+
+
+            }
+        }
     }
 }
