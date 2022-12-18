@@ -224,7 +224,7 @@ namespace BlueLotus360.Web.API.Controllers
                 {
                     StockInjection stockInjection = new StockInjection()
                     {
-                        OrderKey =Convert.ToInt32(request.PartnerOrderId),
+                        OrderKey =Convert.ToInt32(codes.PartnerOrderId),
                         IntegrationId = "4824fc92-10fa-4eca-a7d0-e7048892bc84",
                         RequestId = "JKLL_TST"
                     };
@@ -705,7 +705,7 @@ namespace BlueLotus360.Web.API.Controllers
         public IActionResult APIResponseDet_InsertWeb(ResponseDetails request)
         {
             var company = Request.GetAssignedCompany();
-            request.Reference = request.Reference + company.CompanyCode;
+            request.Reference = request.Reference + company.CompanyKey.ToString();
             bool success = _orderService.APIResponseDet_InsertWeb(request);
             return Ok(success);
         }
