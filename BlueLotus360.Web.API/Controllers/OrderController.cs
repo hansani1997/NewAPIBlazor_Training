@@ -62,15 +62,15 @@ namespace BlueLotus360.Web.API.Controllers
             CodeBaseResponse ordTyp = new CodeBaseResponse();
             if (!string.IsNullOrEmpty(uiObject.Value.OurCode))
             {
-                 var ordtp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
-                 ordTyp = ordtp.Value;
+                var ordtp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
+                ordTyp = ordtp.Value;
             }
             else
             {
                 var ordtp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, orderDetails.OrderType.OurCode, "OrdTyp");
                 ordTyp = ordtp.Value;
             }
-            if (ordTyp==null)
+            if (ordTyp == null)
             {
                 ordTyp = new CodeBaseResponse();
             }
@@ -87,8 +87,8 @@ namespace BlueLotus360.Web.API.Controllers
             var company = Request.GetAssignedCompany();
             var uiObject = _objectService.GetObjectByObjectKey(orderDetails.FormObjectKey);
             var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
-            OrderSaveResponse orderServerResponse= _orderService.UpdateOrder(company, user, orderDetails, ordTyp.Value);
-            
+            OrderSaveResponse orderServerResponse = _orderService.UpdateOrder(company, user, orderDetails, ordTyp.Value);
+
             return Ok(orderServerResponse);
         }
 
@@ -100,7 +100,7 @@ namespace BlueLotus360.Web.API.Controllers
             var uiObject = _objectService.GetObjectByObjectKey((int)request.ObjectKey);
             var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
 
-            BaseServerResponse<IList<OrderFindResults>> orders = _orderService.FindOrders(request,company, user, ordTyp.Value);
+            BaseServerResponse<IList<OrderFindResults>> orders = _orderService.FindOrders(request, company, user, ordTyp.Value);
             return Ok(orders.Value);
         }
 
@@ -110,11 +110,11 @@ namespace BlueLotus360.Web.API.Controllers
             var user = Request.GetAuthenticatedUser();
             var company = Request.GetAssignedCompany();
 
-            BaseServerResponse<GenericOrder> order = _orderService.OpenOrder(company,user,request);
+            BaseServerResponse<GenericOrder> order = _orderService.OpenOrder(company, user, request);
             return Ok(order.Value);
         }
 
-        
+
 
         [HttpPost("getFromQuotation")]
         public IActionResult GetFromQuotation(GetFromQuoatationDTO request)
@@ -126,7 +126,7 @@ namespace BlueLotus360.Web.API.Controllers
             var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
             var preOrdTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode2, "OrdTyp");
 
-            IList<GetFromQuotResults> QuotationList = _orderService.RetrieveQuotation(request, company, user,ordTyp.Value, preOrdTyp.Value).Value;
+            IList<GetFromQuotResults> QuotationList = _orderService.RetrieveQuotation(request, company, user, ordTyp.Value, preOrdTyp.Value).Value;
 
             return Ok(QuotationList);
         }
@@ -139,9 +139,9 @@ namespace BlueLotus360.Web.API.Controllers
             var uiObject = _objectService.GetObjectByObjectKey((int)request.ObjKy);
 
             var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
-            
 
-            GenericOrder ord = _orderService.OpenQuotation( company, user, request, ordTyp.Value).Value;
+
+            GenericOrder ord = _orderService.OpenQuotation(company, user, request, ordTyp.Value).Value;
 
             return Ok(ord);
         }
@@ -172,7 +172,7 @@ namespace BlueLotus360.Web.API.Controllers
             var company = Request.GetAssignedCompany();
             if (request.APIIntegrationName == "Ubereats")
             {
-                company.CompanyKey=1;
+                company.CompanyKey = 1;
             }
             var user = Request.GetAuthenticatedUser();
             APIInformation APIInfo = _orderService.GetAPIDetails(company, user, request).Value;
@@ -213,7 +213,7 @@ namespace BlueLotus360.Web.API.Controllers
         {
             var company = Request.GetAssignedCompany();
             var user = Request.GetAuthenticatedUser();
-            PartnerOrder codes = _orderService.GetOrdersFromOrderPlatforms(company,user, request).Value;
+            PartnerOrder codes = _orderService.GetOrdersFromOrderPlatforms(company, user, request).Value;
             if (codes.PartnerOrderId > 11)
             {
                 long ConfirmKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Confirm", "OrdSts").Value.CodeKey;
@@ -224,7 +224,7 @@ namespace BlueLotus360.Web.API.Controllers
                 {
                     StockInjection stockInjection = new StockInjection()
                     {
-                        OrderKey =Convert.ToInt32(codes.PartnerOrderId),
+                        OrderKey = Convert.ToInt32(codes.PartnerOrderId),
                         IntegrationId = "4824fc92-10fa-4eca-a7d0-e7048892bc84",
                         RequestId = "JKLL_TST"
                     };
@@ -249,7 +249,7 @@ namespace BlueLotus360.Web.API.Controllers
         public IActionResult GetOrderStatusByPartnerStatus(CodeBaseResponse request)
         {
             var company = Request.GetAssignedCompany();
-            CodeBaseResponse codes = _orderService.GetOrderStatusByPartnerStatus(company,request).Value;
+            CodeBaseResponse codes = _orderService.GetOrderStatusByPartnerStatus(company, request).Value;
 
             return Ok(codes);
         }
@@ -263,7 +263,7 @@ namespace BlueLotus360.Web.API.Controllers
             return Ok(codes);
         }
 
-        [HttpPost("GetPartnerOrdersByOrderKy")] 
+        [HttpPost("GetPartnerOrdersByOrderKy")]
         public IActionResult GetPartnerOrdersByOrderKy(RequestParameters request)
         {
             var company = Request.GetAssignedCompany();
@@ -276,7 +276,7 @@ namespace BlueLotus360.Web.API.Controllers
         public IActionResult InsertLastOrderSync(RequestParameters request)
         {
             var company = Request.GetAssignedCompany();
-            bool success = _orderService.InsertLastOrderSync(request,company);
+            bool success = _orderService.InsertLastOrderSync(request, company);
 
             return Ok(success);
         }
@@ -285,14 +285,14 @@ namespace BlueLotus360.Web.API.Controllers
         public IActionResult GenerateProvisionURL(APIRequestParameters request)
         {
             var company = Request.GetAssignedCompany();
-            string Redirect_uri = request.BaseURL +"Order/GenerateProvisionToken?CompanyCode=" + CryptoService.ToEncryptedData(company.CompanyKey.ToString());
-            string link = "https://login.uber.com/oauth/v2/authorize?response_type=code&client_id=" +request.IntegrationID +"&scope=eats.pos_provisioning&redirect_uri=" +Redirect_uri;
+            string Redirect_uri = request.BaseURL + "Order/GenerateProvisionToken?CompanyCode=" + CryptoService.ToEncryptedData(company.CompanyKey.ToString());
+            string link = "https://login.uber.com/oauth/v2/authorize?response_type=code&client_id=" + request.IntegrationID + "&scope=eats.pos_provisioning&redirect_uri=" + Redirect_uri;
             return Ok(link);
         }
 
         [BLAllowAnonymous]
         [HttpGet("GenerateProvisionToken")]
-        public ContentResult GenerateProvisionToken(string CompanyCode, string code)
+        public IActionResult GenerateProvisionToken(string CompanyCode, string code)
         {
             var user = Request.GetAuthenticatedUser();
             CompanyCode = CompanyCode.Replace(" ", "+");
@@ -305,39 +305,30 @@ namespace BlueLotus360.Web.API.Controllers
             int decryptedCompanyKey = Convert.ToInt32(decryptedCompanyKeyAsString);
             UberProvisionHandler uberProvisionHandler = new UberProvisionHandler(_orderService);
             UberTokenHandler uberTokenHandler = new UberTokenHandler(_orderService);
-            APIInformation APIInfo= uberProvisionHandler.GetCommonUberDetails(user== null ? new Core.Domain.Entity.Base.User():user);
+            APIInformation APIInfo = uberProvisionHandler.GetCommonUberDetails(user == null ? new Core.Domain.Entity.Base.User() : user);
             if (APIInfo != null)
             {
                 APIInformation endpointInfo = uberProvisionHandler.GetEndPoint(APIInfo.APIIntegrationKey, UberEndpointURLS.AuthCode.ToString());
                 uberProvisionHandler.InsertAuthEndpoint(code, APIInfo.APIIntegrationKey, endpointInfo.EndPointURL, decryptedCompanyKey);
-                var RedirectURL = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path+ "?CompanyCode=";
+                var RedirectURL = "https://bluelotus360.co/CoreAPI/api/Order/GenerateProvisionToken?CompanyCode=";                    //HttpContext.Request.Scheme + "://" + HttpContext.Request.Host + HttpContext.Request.Path+ "?CompanyCode=";
                 APIInformation ScopeendpointInfo = uberProvisionHandler.GetEndPoint(APIInfo.APIIntegrationKey, UberTokenEndpoints.Eats_Provisioning_Scope.GetDescription());
                 APIInformation GetProvisionToken = uberTokenHandler.GetUberEatsTokensByEndPointName(APIInfo, ScopeendpointInfo, UberTokenEndpoints.Eats_Provisioning_Scope.GetDescription(), RedirectURL, code, decryptedCompanyKey);
-                if(GetProvisionToken.EndPointToken != string.Empty && GetProvisionToken.EndPointToken != null)
+                if (GetProvisionToken.EndPointToken != string.Empty && GetProvisionToken.EndPointToken != null)
                 {
-                    return new ContentResult
-                    {
-                        ContentType = "text/html",
-                        Content = "<div>Successfully Provisioned with Uber !</div>"
-                    };
+
                 }
                 else
                 {
-                    return new ContentResult
-                    {
-                        ContentType = "text/html",
-                        Content = "<div>Something went wrong!</div>"
-                    };
+
                 }
+                return Ok(GetProvisionToken);
             }
             else
             {
-                return new ContentResult
-                {
-                    ContentType = "text/html",
-                    Content = "<div>Something went wrong!</div>"
-                };
+
             }
+
+            return Ok();
         }
 
         [HttpPost("GenerateUberToken")]
@@ -354,7 +345,7 @@ namespace BlueLotus360.Web.API.Controllers
                 APIInformation ScopeendpointInfo = uberProvisionHandler.GetEndPoint(APIInfo.APIIntegrationKey, request.EndPointName);
                 GetUberToken = uberTokenHandler.GetUberEatsTokensByEndPointName(APIInfo, ScopeendpointInfo, request.EndPointName, "", "", company.CompanyKey);
             }
-                return Ok(GetUberToken);
+            return Ok(GetUberToken);
         }
 
         [HttpPost("GetUberEndPoints")]
@@ -412,22 +403,22 @@ namespace BlueLotus360.Web.API.Controllers
             bool success = false;
             var user = Request.GetAuthenticatedUser();
             Company company = Request.GetAssignedCompany();
-            success = _orderService.OrderHubStatus_UpdateWeb(request,user);
+            success = _orderService.OrderHubStatus_UpdateWeb(request, user);
             if (success)
             {
                 long ConfirmKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Confirm", "OrdSts").Value.CodeKey;
                 long CancelKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Cancel", "OrdSts").Value.CodeKey;
                 long RejectKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Reject", "OrdSts").Value.CodeKey;
-                long OrdTypKy= _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "SLSORD", "OrdTyp").Value.CodeKey;
+                long OrdTypKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "SLSORD", "OrdTyp").Value.CodeKey;
                 if (company.CompanyKey == 541 && request.StatusKey == ConfirmKy)
                 {
                     StockInjection stockInjection = new StockInjection()
                     {
-                        OrderKey= request.OrderKey,
-                        IntegrationId= "4824fc92-10fa-4eca-a7d0-e7048892bc84",
-                        RequestId= "JKLL_TST"
+                        OrderKey = request.OrderKey,
+                        IntegrationId = "4824fc92-10fa-4eca-a7d0-e7048892bc84",
+                        RequestId = "JKLL_TST"
                     };
-                    success= StockUpdateAfterConfirmation(stockInjection);
+                    success = StockUpdateAfterConfirmation(stockInjection);
                 }
                 else
                 {
@@ -440,12 +431,12 @@ namespace BlueLotus360.Web.API.Controllers
                     //    _orderService.PostOrderHubStockResevationReversal(request.OrderKey, company, user);
                     //}
                 }
-               
+
             }
             return Ok(success);
         }
 
-        private string SetupItemPicUrl(PartnerMenuItem menuItem, byte[] imgArr,string URL)
+        private string SetupItemPicUrl(PartnerMenuItem menuItem, byte[] imgArr, string URL)
         {
             try
             {
@@ -483,7 +474,7 @@ namespace BlueLotus360.Web.API.Controllers
 
                     }
                 }
-                
+
                 return folderPathforUrl + imageFileName;
             }
             catch (Exception e)
@@ -508,20 +499,20 @@ namespace BlueLotus360.Web.API.Controllers
         public IActionResult GetAllOrderMenuItems(RequestParameters request)
         {
             var company = Request.GetAssignedCompany();
-            IList<PartnerMenuItem> items = _orderService.GetAllOrderMenuItems(company,request).Value;
+            IList<PartnerMenuItem> items = _orderService.GetAllOrderMenuItems(company, request).Value;
             if (items.Count > 0)
             {
                 foreach (PartnerMenuItem item in items)
                 {
-                    if(item.imageArr != null)
+                    if (item.imageArr != null)
                     {
                         item.ItemImage = Convert.ToBase64String(item.imageArr, 0, item.imageArr.Length);
-                        item.ItemImageUrl = SetupItemPicUrl(item, item.imageArr,request.PlatformName);
+                        item.ItemImageUrl = SetupItemPicUrl(item, item.imageArr, request.PlatformName);
                     }
-                    
+
                 }
             }
-            
+
 
             return Ok(items);
         }
@@ -532,7 +523,7 @@ namespace BlueLotus360.Web.API.Controllers
             var company = Request.GetAssignedCompany();
             object StatusKey;
             int OrdStsKy = 1;
-            
+
             if (request.AddtionalData.TryGetValue("StatusKey", out StatusKey))
             {
                 long value = 1;
@@ -544,21 +535,21 @@ namespace BlueLotus360.Web.API.Controllers
         }
 
 
-        [BLAllowAnonymous]      
+        [BLAllowAnonymous]
         [HttpPost("UberWebhook")]
         public IActionResult UberWebhook(UberWebhookResponseModel model)
         {
-           
-        /*
-         * 1. set incoming webhook to the webhook queue
-         * 2. check for duplicate events
-         * 3. trigger webhook handleing event
-         * 4. send 200 ok response to uber
-         * 5. process webhook handling method
-         * 6. unsubscribe event
-        */
 
-        var duplicateEvent = webHookQueue.FirstOrDefault(x => x.Event_id == model.Event_id);
+            /*
+             * 1. set incoming webhook to the webhook queue
+             * 2. check for duplicate events
+             * 3. trigger webhook handleing event
+             * 4. send 200 ok response to uber
+             * 5. process webhook handling method
+             * 6. unsubscribe event
+            */
+
+            var duplicateEvent = webHookQueue.FirstOrDefault(x => x.Event_id == model.Event_id);
             if (duplicateEvent == null)
             {
                 //2
@@ -572,7 +563,7 @@ namespace BlueLotus360.Web.API.Controllers
 
 
             //4
-            
+
             return Ok();
 
 
@@ -598,12 +589,12 @@ namespace BlueLotus360.Web.API.Controllers
                      * 4. proceesed webhook dequeue from the webhook queue
                      * 5.event needed to trigger notify the react frontend
                     */
-                    UberOrderHandler orderHandler = new UberOrderHandler(_orderService,_codeBaseService,_addressService);
+                    UberOrderHandler orderHandler = new UberOrderHandler(_orderService, _codeBaseService, _addressService);
                     APIRequestParameters request = new APIRequestParameters()
                     {
                         APIName = model.Meta.User_id
                     };
-                    
+
                     APIInformation StoreInfo = _orderService.GetAPIDetailsByMerchantID(request).Value;
                     //1 & 2
                     if (model.Event_type == "orders.notification")
@@ -617,7 +608,7 @@ namespace BlueLotus360.Web.API.Controllers
                         //companykey and locationkey must be extract from store id which comes with model.Meta.User_id
                         RequestParameters orderreq = new RequestParameters()
                         {
-                            OrderID= model.Meta.Resource_id
+                            OrderID = model.Meta.Resource_id
                         };
                         Company company = new Company();
                         company.CompanyKey = StoreInfo.MappedCompanyKey;
@@ -626,11 +617,11 @@ namespace BlueLotus360.Web.API.Controllers
                         CodeBaseResponse CancelStatus = orderStatusList.Where(x => x.CodeName == "Cancelled").FirstOrDefault();
                         RequestParameters updateeq = new RequestParameters()
                         {
-                            StatusKey= Convert.ToInt32(CancelStatus.CodeKey),
-                            OrderKey=Convert.ToInt32(partnerorder.PartnerOrderId)
+                            StatusKey = Convert.ToInt32(CancelStatus.CodeKey),
+                            OrderKey = Convert.ToInt32(partnerorder.PartnerOrderId)
                         };
                         _orderService.OrderHubStatus_UpdateWeb(updateeq, new Core.Domain.Entity.Base.User());
-                        
+
                     }
 
                     if (model.Event_type == "store.provisioned")
@@ -665,7 +656,7 @@ namespace BlueLotus360.Web.API.Controllers
 
         private bool StockUpdateAfterConfirmation(StockInjection stockInjection)
         {
-            string Timestamp= DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+            string Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
             var client = new RestClient("https://bl360x.com/BLEFutureAPI/api/");
             var request = new RestRequest("Reconciliation/PorpergateStockTransactions", Method.Post);
             request.AddHeader("Timestamp", Timestamp);
@@ -687,7 +678,7 @@ namespace BlueLotus360.Web.API.Controllers
         public IActionResult GetOrderHubBU()
         {
             var company = Request.GetAssignedCompany();
-            
+
             IList<CodeBaseResponse> items = _orderService.GetOrderHubBU(company).Value;
             return Ok(items);
         }
@@ -696,7 +687,7 @@ namespace BlueLotus360.Web.API.Controllers
         public IActionResult GetAvailablePickmeOrders(RequestParameters request)
         {
             var company = Request.GetAssignedCompany();
-            
+
             IList<PartnerOrder> items = _orderService.GetAvailablePickmeOrders(company, request).Value;
             return Ok(items);
         }
