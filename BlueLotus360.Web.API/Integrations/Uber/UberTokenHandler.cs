@@ -17,7 +17,7 @@ namespace BlueLotus360.Web.API.Integrations.Uber
             _orderService = orderService;
         }
 
-        public string UberToken(APIInformation CommonAPIInfo,APIInformation aPIInformation,string EndPointName,string RedirectURL,string code,int CompanyKey)
+        public TokebGeneratioResponse UberToken(APIInformation CommonAPIInfo,APIInformation aPIInformation,string EndPointName,string RedirectURL,string code,int CompanyKey)
         {
             /*
              * 1. Get client id, client secret, api integration key
@@ -26,9 +26,11 @@ namespace BlueLotus360.Web.API.Integrations.Uber
              * 4. use token if available
              * 5. token not availble or expire generate new token and save db
             */
+
+            TokebGeneratioResponse response= new TokebGeneratioResponse();
             if ((aPIInformation.EndPointToken != "" || aPIInformation.EndPointToken != "1") && DateTime.Compare(DateTime.Today, aPIInformation.TokenValidTillTime) < 0)
             {
-                return aPIInformation.EndPointToken;
+                response.Value= aPIInformation.EndPointToken;
 
             }
             else
@@ -37,19 +39,22 @@ namespace BlueLotus360.Web.API.Integrations.Uber
 
                 if (EndPointName == "eats.pos_provisioning")
                 {
-                    genratedToken = UberProvisioningTokenGeneratingService(CommonAPIInfo, aPIInformation, EndPointName, RedirectURL, code,CompanyKey);
+                    response = UberProvisioningTokenGeneratingService(CommonAPIInfo, aPIInformation, EndPointName, RedirectURL, code,CompanyKey);
                 }
                 else
                 {
-                    genratedToken = UberTokenGeneratingService(CommonAPIInfo, aPIInformation, EndPointName, 1);
+                    response = UberTokenGeneratingService(CommonAPIInfo, aPIInformation, EndPointName, 1);
                 }
 
-                return genratedToken;
+              
             }
+            return response;
         }
 
-        public string UberProvisioningTokenGeneratingService(APIInformation UberData,APIInformation EndpointData,string EndPointName,string RedirectURL,string code,int CompanyKey)
+        public TokebGeneratioResponse UberProvisioningTokenGeneratingService(APIInformation UberData,APIInformation EndpointData,string EndPointName,string RedirectURL,string code,int CompanyKey)
         {
+
+            TokebGeneratioResponse resp = new();
             var client = new RestClient(UberData.AlertnateBaseURL);
             var request = new RestRequest(EndpointData.EndPointURL,Method.Post);
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -60,6 +65,7 @@ namespace BlueLotus360.Web.API.Integrations.Uber
             request.AddParameter("redirect_uri", RedirectURL);
             request.AddParameter("code", code);
             RestResponse response = client.Execute(request);
+             
             var settings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
@@ -80,21 +86,24 @@ namespace BlueLotus360.Web.API.Integrations.Uber
                 Company Assignedcompany = new Company();
                 Assignedcompany.CompanyKey = CompanyKey;
                 _orderService.InsertApiEndPoint(endpoint, Assignedcompany);
-                return uberTokenResponse.Access_token;
+                resp.Value =  uberTokenResponse.Access_token;
             }
             else
             {
-                return string.Empty;
+                
+                resp.Value = string.Empty;
             }
+            resp.ResponseErrors.Add("UberResponse",response);
+            return resp;
         }
 
-        public string UberTokenGeneratingService(APIInformation CommonApiInfo, APIInformation EndPointApiInfo, string Scope, int CompanyKey)
+        public TokebGeneratioResponse UberTokenGeneratingService(APIInformation CommonApiInfo, APIInformation EndPointApiInfo, string Scope, int CompanyKey)
         {
             /*
              * 1. check token is exists or expire (token expires in 30 days)
              * 2. generate new token if not exists or expire
             */
-
+            TokebGeneratioResponse resp = new();
             if (CommonApiInfo.AlertnateBaseURL != null && EndPointApiInfo.EndPointURL != null && CommonApiInfo.SecretInstanceKey != null)
             {
                 var client = new RestClient(CommonApiInfo.AlertnateBaseURL);
@@ -125,26 +134,30 @@ namespace BlueLotus360.Web.API.Integrations.Uber
                     Company Assignedcompany = new Company();
                     Assignedcompany.CompanyKey = CompanyKey;
                     _orderService.InsertApiEndPoint(endpoint, Assignedcompany);
-                    return uberTokenResponse.Access_token;
+                    resp.Value = uberTokenResponse.Access_token;
                 }
                 else
                 {
-                    return string.Empty;
+                    resp.Value = string.Empty;
                 }
             }
             else
             {
-                return string.Empty;
+                resp.Value = string.Empty;
             }
 
+            return resp;
 
         }
 
         public APIInformation GetUberEatsTokensByEndPointName(APIInformation UberData, APIInformation EndpointData, string EndPointName, string RedirectURL, string code, int CompanyKey)
         {
             APIInformation returnInfo = new APIInformation();
-            returnInfo.EndPointToken = UberToken(UberData, EndpointData,  EndPointName, RedirectURL, code,CompanyKey);
-            returnInfo.APIIntegrationKey = UberData.APIIntegrationKey;
+
+           var obj = UberToken(UberData, EndpointData,  EndPointName, RedirectURL, code,CompanyKey);
+            returnInfo.EndPointToken = obj.Value;
+            returnInfo.TokenResp = obj;
+           returnInfo.APIIntegrationKey = UberData.APIIntegrationKey;
             returnInfo.BaseURL = UberData.BaseURL;
             returnInfo.AlertnateBaseURL = UberData.AlertnateBaseURL;
             return returnInfo;

@@ -57,5 +57,6 @@ namespace BlueLotus360.Core.Domain.Definitions.Repository
         string PostOrderHubStockResevationReversal(int OrdKy, Company company, User user);
         BaseServerResponse<IList<CodeBaseResponse>> GetOrderHubBU(Company company);
         BaseServerResponse<IList<PartnerOrder>> GetAvailablePickmeOrders(Company company,  RequestParameters order);
+        bool APIResponseDet_InsertWeb(ResponseDetails request);
     }
 }

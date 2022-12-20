@@ -129,6 +129,7 @@ namespace BlueLotus360.Core.Domain.DTOs
         public DateTime UpdateDate { get; set; } = DateTime.Now;
         public CodeBaseResponse AnalysisType1 { get; set; }
 		public CodeBaseResponse AnalysisType2 { get; set; }
+		public CodeBaseResponse AnalysisType4 { get; set; }
 		public GenericOrderItem()
         {
             OrderLineLocation = new CodeBaseResponse();
@@ -139,8 +140,10 @@ namespace BlueLotus360.Core.Domain.DTOs
             Supplier=new AccountResponse();
             ResourceAddress = new AddressResponse();
             AnalysisType1 = new CodeBaseResponse();
-            AnalysisType2= new CodeBaseResponse();  
-        }
+            AnalysisType2= new CodeBaseResponse();
+			AnalysisType4 = new CodeBaseResponse();
+
+		}
 
     }
 
@@ -373,7 +376,8 @@ namespace BlueLotus360.Core.Domain.DTOs
         public CodeBaseResponse AnalysisType1 = new CodeBaseResponse();
         public CodeBaseResponse AnalysisType2 = new CodeBaseResponse();
         public CodeBaseResponse AnalysisType3 = new CodeBaseResponse();
-    }
+		public CodeBaseResponse AnalysisType4 = new CodeBaseResponse();
+	}
 
     public class OrderFindDto
     {

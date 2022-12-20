@@ -213,12 +213,13 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@ItmTaxTyp5Per", item.ItemTaxType5Per);
                     dbCommand.CreateAndAddParameter("@PrjKy", item.ProjectKey);
                     dbCommand.CreateAndAddParameter("@Anl2Ky", (int)item.AnalysisType2.CodeKey);
+					dbCommand.CreateAndAddParameter("@Anl4Ky", (int)item.AnalysisType4.CodeKey);
 
-                    //  dbCommand.CreateAndAddParameter("ItmPrpKy", item.ItemProperty1);
+					//  dbCommand.CreateAndAddParameter("ItmPrpKy", item.ItemProperty1);
 
-                    // dbCommand.CreateAndAddParameter("IsSetOff",item.)
+					// dbCommand.CreateAndAddParameter("IsSetOff",item.)
 
-                    response.ExecutionStarted = DateTime.UtcNow;
+					response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
                     reader = dbCommand.ExecuteReader();
                     while (reader.Read())
@@ -556,6 +557,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@OrgQty", item.OriginalQuantity);
                     dbCommand.CreateAndAddParameter("@PrjKy", item.ProjectKey);
 					dbCommand.CreateAndAddParameter("@Anl2Ky", (int)item.AnalysisType2.CodeKey);
+					dbCommand.CreateAndAddParameter("@Anl4Ky", (int)item.AnalysisType4.CodeKey);
 
 					response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
@@ -907,6 +909,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         oorderV3.AnalysisType3 = new CodeBaseResponse() {CodeKey= reader.GetColumn<int>("Anl3Ky") ,CodeName= reader.GetColumn<string>("Anl3Cd")??"" };
                         oorderV3.AnalysisType2.CodeKey = reader.GetColumn<int>("Anl2Ky");
                         oorderV3.AnalysisType2.Code = reader.GetColumn<string>("Anl2Cd");
+						oorderV3.AnalysisType4.CodeKey = reader.GetColumn<int>("Anl4Ky");
 						//carmrt and principle values customer amount
 
 						itemList.Add(oorderV3);
@@ -3121,6 +3124,52 @@ namespace BlueLotus360.Data.SQL92.Repository
                 }
 
                 return response;
+            }
+        }
+
+        public bool APIResponseDet_InsertWeb(ResponseDetails request)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+
+                string SPName = "APIResponseDet_InsertWeb";
+
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("TriggerKy", request.TriggerKey);
+                    dbCommand.CreateAndAddParameter("ResponseCode", request.ResponseCode);
+                    dbCommand.CreateAndAddParameter("Response", request.Response);
+                    dbCommand.CreateAndAddParameter("APISubscriberKy", request.SubscriberKey);
+                    dbCommand.CreateAndAddParameter("ContentPayload", request.ContenetPayload);
+                    dbCommand.CreateAndAddParameter("Reference", request.Reference);
+                    dbCommand.CreateAndAddParameter("TrnTyp", request.TrnTyp);
+
+                    dbCommand.Connection.Open();
+                    dbCommand.ExecuteNonQuery();
+                    return true;
+
+
+                }
+                catch (Exception exp)
+                {
+                    return false;
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+                }
+
+
             }
         }
     }

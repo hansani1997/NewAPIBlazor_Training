@@ -1,7 +1,9 @@
-﻿using BlueLotus360.Core.Domain.Entity.Base;
+﻿using BlueLotus360.Core.Domain.Definitions.Repository;
+using BlueLotus360.Core.Domain.Entity.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,6 +50,7 @@ namespace BlueLotus360.Core.Domain.Entity.API
         public DateTime TokenValidTillTime { get; set; }
         public CodeBaseResponse Location { get; set; }
         public CodeBaseResponse BU { get; set; }
+        public TokebGeneratioResponse TokenResp { get; set; }
     }
 
     public class APIRequestParameters
@@ -63,5 +66,26 @@ namespace BlueLotus360.Core.Domain.Entity.API
         public string? EndPointToken { get; set; }
         public string? EndPointURL { get; set; }
         public DateTime TokenValidTillTime { get; set; }
+
+
+      
+
+        
     }
+
+
+    public class TokebGeneratioResponse
+    {
+        public TokebGeneratioResponse() { 
+        ResponseErrors=new Dictionary<string,object>();
+        }
+
+       public  IDictionary<string, object> ResponseErrors { get; set; }
+
+        public string Value { get; set; }
+
+    }
+
+
+     
 }

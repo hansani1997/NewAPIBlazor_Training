@@ -211,4 +211,15 @@ namespace BlueLotus360.Core.Domain.Entity
         public string? IntegrationId { get; set; }
         public string? RequestId { get; set; }
     }
+
+    public class ResponseDetails
+    {
+        public int TriggerKey { get; set; }
+        public int SubscriberKey { get; set; }
+        public string? ResponseCode { get; set; }
+        public string? Response { get; set; }
+        public string? Reference { get; set; }
+        public string? TrnTyp { get; set; }
+        public string? ContenetPayload { get; set; }
+    }
 }

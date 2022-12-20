@@ -20,7 +20,7 @@ namespace BlueLotus360.Web.API.Controllers
         ILogger<AuthenticationController> _logger;
         IUserService _userService;
 
-      
+      // ext
         public AuthenticationController(ILogger<AuthenticationController> logger, IUserService userService)
         {
             _logger = logger;

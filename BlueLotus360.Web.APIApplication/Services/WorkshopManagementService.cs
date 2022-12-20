@@ -290,6 +290,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.Description = item.Description;
 					lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
                     lineItem.AnalysisType2.CodeKey = item.AnalysisType2.CodeKey;
+                    lineItem.AnalysisType4.CodeKey = item.AnalysisType4.CodeKey;
 
 					//   TotalDiscount += Math.Abs(item.GetLineDiscount()));
 					_unitOfWork.OrderRepository.CreateOrderLineItem(lineItem, company, user, new UIObject() { ObjectId = order.FormObjectKey });
@@ -537,6 +538,8 @@ namespace BlueLotus360.Web.APIApplication.Services
             OH.OrderKey = orderDetails.OrderKey;
             OH.OrderLocation = new CodeBaseResponse();
             OH.OrderLocation.CodeKey = orderDetails.OrderLocation.CodeKey;
+            OH.Location2 = new CodeBaseResponse();
+            OH.Location2.CodeKey = orderDetails.OrderLocation.CodeKey;
             OH.OrderDate = orderDetails.OrderDate;
             OH.OrderType = new CodeBaseResponse();
             OH.OrderType.CodeKey = orderDetails.OrderType.CodeKey;
@@ -625,6 +628,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.Description = item.Description;
 					lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
 					lineItem.AnalysisType2.CodeKey = item.AnalysisType2.CodeKey;
+					lineItem.AnalysisType4.CodeKey = item.AnalysisType4.CodeKey;
 
 					_unitOfWork.OrderRepository.UpdateGenericOrderLineItem(lineItem, orderDetails.FormObjectKey, company, user);
                 }
@@ -794,8 +798,9 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.InsertDate = item.InsertDate;
                     lineItem.UpdateDate = item.UpdateDate;
                     lineItem.AnalysisType2 = item.AnalysisType2;
+				    lineItem.AnalysisType4 = item.AnalysisType4;
 
-                    var concode  = _unitOfWork.CodeBaseRepository.GetControlConditionCode(company, user, lineItem.ObjectKey, "OrdDetAcc");
+				var concode  = _unitOfWork.CodeBaseRepository.GetControlConditionCode(company, user, lineItem.ObjectKey, "OrdDetAcc");
                     int controlConKy = (int)concode.Value.CodeKey;
 
                     WorkOrderAmountByAccount company_accdet = new WorkOrderAmountByAccount()

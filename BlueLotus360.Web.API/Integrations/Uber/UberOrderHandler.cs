@@ -59,6 +59,22 @@ namespace BlueLotus360.Web.API.Integrations.Uber
                 if (response.IsSuccessful)
                 {
                     UberOrder UberOrder = JsonConvert.DeserializeObject<UberOrder>(response.Content, settings);
+                    if(UberOrder != null && UberOrder.Cart.Items.Count > 0)
+                    {
+                       
+                        ResponseDetails res = new ResponseDetails()
+                        {
+                            TriggerKey = 3,
+                            SubscriberKey = 3,
+                            ResponseCode = response.StatusDescription,
+                            Response = response.Content,
+                            ContenetPayload = endpointInfo.EndPointURL,
+                            Reference = "Uber Orders: "+ OrderID,
+                            TrnTyp = "PUOrd"
+
+                        };
+                        _orderService.APIResponseDet_InsertWeb(res);
+                    }
                     SaveUberOrder(UberOrder, MerchantID);
                 }
             }
