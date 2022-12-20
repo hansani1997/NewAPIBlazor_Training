@@ -133,6 +133,8 @@ namespace BlueLotus360.Core.Domain.Entity.WorkOrder
 
     public class Estimation
     {
+        public long EstimateKey { get; set; }
+        public string? EstimationNumber { get; set; } = "";
         public IList<GenericOrderItem> EstimatedMaterials { get; set; }
         public IList<GenericOrderItem> EstimatedServices { get; set; }
         public decimal TotalValue { get; set; }

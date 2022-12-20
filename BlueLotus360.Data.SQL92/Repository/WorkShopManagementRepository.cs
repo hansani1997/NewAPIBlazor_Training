@@ -157,6 +157,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         order.OrderStatus.CodeName = reader.GetColumn<string>("Status");
                         order.TrnKy= reader.GetColumn<int>("InvoiceTrnKy");
                         order.OrderCategory1 = new CodeBaseResponse() { CodeKey= reader.GetColumn<int>("OrdCat1Ky") ,CodeName= reader.GetColumn<string>("OrdCat1") };
+                        order.WorkOrderSimpleEstimation=new Estimation() { EstimateKey= reader.GetColumn<int>("EstimateKy"),EstimationNumber= reader.GetColumn<string>("EstimateNo")??"" };
                         list.Add(order);
                     }
                     response.ExecutionEnded = DateTime.UtcNow;

@@ -42,7 +42,8 @@ namespace BlueLotus360.Core.Domain.DTOs
         public decimal MeterReading { get; set; }
         public User EnteredUser { get; set; }
         public AccountResponse Insurance { get; set; }
-      
+        public CodeBaseResponse AddressCategory3 { get; set; }
+
         public GenericOrder()
         {
             OrderLocation = new CodeBaseResponse();
@@ -65,6 +66,7 @@ namespace BlueLotus360.Core.Domain.DTOs
             EnteredUser = new User();
             Insurance = new AccountResponse();
             EnteredUser = new User();
+            AddressCategory3=new CodeBaseResponse();    
         }
 
     }
@@ -220,7 +222,7 @@ namespace BlueLotus360.Core.Domain.DTOs
         public CodeBaseResponse OrderType { get; set; } = new CodeBaseResponse();
         public decimal MeterReading { get; set; }
         public AccountResponse Insurance { get; set; } = new AccountResponse();
-
+        public int AdrCat3Ky { get; set; }
 
     }
 
