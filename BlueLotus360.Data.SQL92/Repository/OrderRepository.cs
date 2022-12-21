@@ -93,6 +93,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("Cd1Ky", orderHeader.Code1Key);
                     dbCommand.CreateAndAddParameter("MeterReading",orderHeader.MeterReading);
                     dbCommand.CreateAndAddParameter("Adr2Ky", orderHeader.Insurance.AccountKey);
+                    dbCommand.CreateAndAddParameter("AdrCat3Ky", orderHeader.AdrCat3Ky);
 
                     response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();

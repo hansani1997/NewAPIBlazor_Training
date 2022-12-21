@@ -185,10 +185,12 @@ namespace BlueLotus360.Data.SQL92.Repository
                     response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
                     reader = dbCommand.ExecuteReader();
-
+                    int ky = 0;
+                    int cusky = 0;
                     while (reader.Read())
                     {
-
+                        ky= reader.GetColumn<int>("VehAdrKy");
+                        cusky = reader.GetColumn<int>("CusAdrKy");
                     }
 
                     response.ExecutionEnded = DateTime.UtcNow;

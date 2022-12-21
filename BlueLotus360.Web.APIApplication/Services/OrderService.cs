@@ -53,6 +53,7 @@ namespace BlueLotus360.Web.APIApplication.Services
             OH.OrderCategory2Key = (int)orderDetails.OrderCategory2.CodeKey;
             OH.ProjectKey = (int)orderDetails.OrderProject.ProjectKey;
             OH.Code1Key = orderDetails.Cd1Ky;
+            OH.AdrCat3Ky = (int)orderDetails.AddressCategory3.CodeKey;
 
             if (!BaseComboResponse.IsEntityWithDefaultValue(orderDetails.OrderAccount))
             {

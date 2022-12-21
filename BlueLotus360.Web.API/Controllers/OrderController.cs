@@ -315,13 +315,14 @@ namespace BlueLotus360.Web.API.Controllers
                 APIInformation GetProvisionToken = uberTokenHandler.GetUberEatsTokensByEndPointName(APIInfo, ScopeendpointInfo, UberTokenEndpoints.Eats_Provisioning_Scope.GetDescription(), RedirectURL, code, decryptedCompanyKey);
                 if (GetProvisionToken.EndPointToken != string.Empty && GetProvisionToken.EndPointToken != null)
                 {
-
+                    return Ok("Token Generation Done");
                 }
                 else
                 {
-
+                    return Ok("Invalid Integration Token");
                 }
-                return Ok(GetProvisionToken);
+                GetProvisionToken.TokenResp = new();
+                return Ok("Done");
             }
             else
             {
