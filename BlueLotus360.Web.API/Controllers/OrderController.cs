@@ -443,13 +443,8 @@ namespace BlueLotus360.Web.API.Controllers
                 Company company = Request.GetAssignedCompany();
                 string folderPathforUrl = string.Empty;
                 string imageFileName = string.Empty;
-                if (company.CompanyKey == 541)
-                {
-                    folderPathforUrl = "https://bluelotus360.co/3pl/nst/";
-                    imageFileName = menuItem.ItemCode + ".jpg";
-                }
-                else
-                {
+                
+                
                     string folderPath = Path.Combine(URL, "/" + CryptoService.ToEncryptedData(company.CompanyKey.ToString()) + "/");
                     folderPathforUrl = URL + "/" + CryptoService.ToEncryptedData(company.CompanyKey.ToString()) + "/";
                     imageFileName = menuItem.ItemCode + ".jpg";
@@ -473,7 +468,7 @@ namespace BlueLotus360.Web.API.Controllers
 
 
                     }
-                }
+                
 
                 return folderPathforUrl + imageFileName;
             }
@@ -508,6 +503,13 @@ namespace BlueLotus360.Web.API.Controllers
                     {
                         item.ItemImage = Convert.ToBase64String(item.imageArr, 0, item.imageArr.Length);
                         item.ItemImageUrl = SetupItemPicUrl(item, item.imageArr, request.PlatformName);
+                    }
+                    if (company.CompanyKey == 541 && item.imageArr == null)
+                    {
+                        if (System.IO.File.Exists("https://bluelotus360.co/3pl/nst/" + item.ItemCode + ".jpg"))
+                        {
+                            item.ItemImageUrl = "https://bluelotus360.co/3pl/nst/" + item.ItemCode + ".jpg";
+                        }
                     }
 
                 }
