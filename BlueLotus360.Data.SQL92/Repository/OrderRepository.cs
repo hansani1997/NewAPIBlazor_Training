@@ -1780,6 +1780,8 @@ namespace BlueLotus360.Data.SQL92.Repository
                     {
                         information.APIIntegrationKey = reader.GetColumn<int>("ApiIntgrKy");
                         information.EndPointURL = reader.GetColumn<string>("EndPointUrl");
+                        information.EndPointToken = reader.GetColumn<string>("EndPointToken");
+                        information.TokenValidTillTime = reader.GetColumn<DateTime>("TokenValidTm");
                     }
                     response.ExecutionEnded = DateTime.UtcNow;
                     response.Value = information;
