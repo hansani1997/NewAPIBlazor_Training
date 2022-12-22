@@ -567,6 +567,10 @@ namespace BlueLotus360.Web.APIApplication.Services
         {
             return _unitOfWork.OrderRepository.APIResponseDet_InsertWeb(request);
         }
-        
+
+        public int GetPickMeOrderByOrderID(Company company, RequestParameters partnerOrder)
+        {
+            return _unitOfWork.OrderRepository.GetPickMeOrderByOrderID(company, partnerOrder);
+        }
     }
 }
