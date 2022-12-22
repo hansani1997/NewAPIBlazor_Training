@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System.Drawing;
+using System.Reflection.Emit;
 using System.Text.Json;
 using System.Transactions;
 using static BlueLotus360.Core.Domain.Entity.UberEats.UberWebHook;
@@ -230,6 +231,17 @@ namespace BlueLotus360.Web.API.Controllers
                     };
                     StockUpdateAfterConfirmation(stockInjection);
                 }
+                else if(company.CompanyKey == 541 && request.OrderStatus.CodeKey == CancelKy)
+                {
+                    StockInjection stockInjection = new StockInjection()
+                    {
+                        OrderKey = Convert.ToInt32(codes.PartnerOrderId),
+                        IntegrationId = "4824fc92-10fa-4eca-a7d0-e7048892bc84",
+                        RequestId = "JKLL_TST"
+                    };
+
+                    StockUpdateAfterCancellation(stockInjection);
+                }
                 else
                 {
                     //if (request.StatusKey == ConfirmKy)
@@ -420,6 +432,17 @@ namespace BlueLotus360.Web.API.Controllers
                         RequestId = "JKLL_TST"
                     };
                     success = StockUpdateAfterConfirmation(stockInjection);
+                }
+                else if (company.CompanyKey == 541 && request.StatusKey == CancelKy)
+                {
+                    StockInjection stockInjection = new StockInjection()
+                    {
+                        OrderKey = request.OrderKey,
+                        IntegrationId = "4824fc92-10fa-4eca-a7d0-e7048892bc84",
+                        RequestId = "JKLL_TST"
+                    };
+
+                    StockUpdateAfterCancellation(stockInjection);
                 }
                 else
                 {
@@ -702,6 +725,26 @@ namespace BlueLotus360.Web.API.Controllers
             request.Reference = request.Reference + company.CompanyKey.ToString();
             bool success = _orderService.APIResponseDet_InsertWeb(request);
             return Ok(success);
+        }
+
+        private bool StockUpdateAfterCancellation(StockInjection stockInjection)
+        {
+            string Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+            var client = new RestClient("https://bl360x.com/BLEFutureAPI/api/");
+            var request = new RestRequest("Reconciliation/PorpergateOrderCancelation", Method.Post);
+            request.AddHeader("Timestamp", Timestamp);
+            request.AddHeader("Authorization", "Bearer 6a92fb8b0532d2370aef1f912f72568dcda21c6853a6dbc2be531fcb02002e5c");
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("application/json", JsonConvert.SerializeObject(stockInjection), ParameterType.RequestBody);
+            RestResponse response = client.Execute(request);
+            if (response.IsSuccessful)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }
