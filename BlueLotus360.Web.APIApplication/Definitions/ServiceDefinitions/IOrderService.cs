@@ -51,5 +51,6 @@ namespace BlueLotus360.Web.APIApplication.Definitions.ServiceDefinitions
         BaseServerResponse<IList<CodeBaseResponse>> GetOrderHubBU(Company company);
         BaseServerResponse<IList<PartnerOrder>> GetAvailablePickmeOrders(Company company, RequestParameters order);
         bool APIResponseDet_InsertWeb(ResponseDetails request);
+        int GetPickMeOrderByOrderID(Company company, RequestParameters partnerOrder);
     }
 }

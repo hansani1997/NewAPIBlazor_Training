@@ -3174,5 +3174,64 @@ namespace BlueLotus360.Data.SQL92.Repository
 
             }
         }
+
+        public int GetPickMeOrderByOrderID(Company company, RequestParameters partnerOrder)
+        {
+            int OrdKy = 0;
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                IDataReader reader = null;
+                string SPName = "GetPickMeOrderByOrderID";
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("CKy", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("OurAccCd", partnerOrder.PlatformName);
+                    dbCommand.CreateAndAddParameter("OrdID", partnerOrder.OrderID);
+                    dbCommand.Connection.Open();
+                    reader = dbCommand.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        OrdKy = reader.GetColumn<int>("OrdKy");
+                    }
+
+                    if (!reader.IsClosed)
+                    {
+                        reader.Close();
+                    }
+
+
+
+
+                }
+                catch (Exception exp)
+                {
+
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+                    if (reader != null)
+                    {
+                        if (!reader.IsClosed)
+                        {
+                            reader.Close();
+                        }
+                    }
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    reader.Dispose();
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+
+                }
+
+                return OrdKy;
+            }
+        }
     }
 }

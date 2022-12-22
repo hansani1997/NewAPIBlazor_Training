@@ -747,5 +747,14 @@ namespace BlueLotus360.Web.API.Controllers
             }
         }
 
+        [HttpPost("GetPickMeOrderByOrderID")]
+        public IActionResult GetPickMeOrderByOrderID(RequestParameters request)
+        {
+            var company = Request.GetAssignedCompany();
+            int OrdKy = _orderService.GetPickMeOrderByOrderID(company, request);
+
+            return Ok(OrdKy);
+        }
+
     }
 }
