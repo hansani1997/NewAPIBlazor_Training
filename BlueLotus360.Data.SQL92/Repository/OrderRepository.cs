@@ -89,11 +89,13 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("AccKy", orderHeader.AccountKey);
                     dbCommand.CreateAndAddParameter("OrdCat1", orderHeader.OrderCategory1Key);
                     dbCommand.CreateAndAddParameter("OrdCat2", orderHeader.OrderCategory2Key);
+                    dbCommand.CreateAndAddParameter("OrdCat3", orderHeader.OrderCategory3Key);
                     dbCommand.CreateAndAddParameter("PrjKy", orderHeader.ProjectKey);
                     dbCommand.CreateAndAddParameter("Cd1Ky", orderHeader.Code1Key);
                     dbCommand.CreateAndAddParameter("MeterReading",orderHeader.MeterReading);
                     dbCommand.CreateAndAddParameter("Adr2Ky", orderHeader.Insurance.AccountKey);
                     dbCommand.CreateAndAddParameter("AdrCat3Ky", orderHeader.AdrCat3Ky);
+                    dbCommand.CreateAndAddParameter("FrmOrdKy", orderHeader.FromOrderKey);
 
                     response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
@@ -214,12 +216,13 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@PrjKy", item.ProjectKey);
                     dbCommand.CreateAndAddParameter("@Anl2Ky", (int)item.AnalysisType2.CodeKey);
 					dbCommand.CreateAndAddParameter("@Anl4Ky", (int)item.AnalysisType4.CodeKey);
+                    dbCommand.CreateAndAddParameter("@FrmOrdDetKy", item.FrmOrdDetKy);
 
-					//  dbCommand.CreateAndAddParameter("ItmPrpKy", item.ItemProperty1);
+                    //  dbCommand.CreateAndAddParameter("ItmPrpKy", item.ItemProperty1);
 
-					// dbCommand.CreateAndAddParameter("IsSetOff",item.)
+                    // dbCommand.CreateAndAddParameter("IsSetOff",item.)
 
-					response.ExecutionStarted = DateTime.UtcNow;
+                    response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
                     reader = dbCommand.ExecuteReader();
                     while (reader.Read())
@@ -451,7 +454,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("Adr2Ky", orderV3.Insurance.AccountKey);
 					dbCommand.CreateAndAddParameter("@AccKy", orderV3.AccountKey);
 
-					response.ExecutionStarted = DateTime.UtcNow;
+                    response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
                     reader = dbCommand.ExecuteReader();
                     while (reader.Read())
@@ -552,14 +555,14 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@ObjKy", ObjKy);
                     dbCommand.CreateAndAddParameter("@isTransfer", item.IsTransfer);
                     dbCommand.CreateAndAddParameter("@isConfirmed", item.IsConfirmed);
-                    dbCommand.CreateAndAddParameter("@FrmOrdDetKy", item.FromOrderDetailKey);
+                    dbCommand.CreateAndAddParameter("@FrmOrdDetKy", item.FrmOrdDetKy);//changed this FromOrderDetailKey to FrmOrdDetKy
                     dbCommand.CreateAndAddParameter("@TrnPri", item.TransactionPrice);
                     dbCommand.CreateAndAddParameter("@OrgQty", item.OriginalQuantity);
                     dbCommand.CreateAndAddParameter("@PrjKy", item.ProjectKey);
 					dbCommand.CreateAndAddParameter("@Anl2Ky", (int)item.AnalysisType2.CodeKey);
 					dbCommand.CreateAndAddParameter("@Anl4Ky", (int)item.AnalysisType4.CodeKey);
 
-					response.ExecutionStarted = DateTime.UtcNow;
+                    response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
                     reader = dbCommand.ExecuteReader();
                     while (reader.Read())

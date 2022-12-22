@@ -19,7 +19,8 @@ namespace BlueLotus360.Core.Domain.Entity.MastrerData
         public string? ParentProjectID { get; set; }
         public string? ParentProjectName { get; set; }
         public CodeBaseResponse ProjectStatus { get; set; } = new CodeBaseResponse();//PrjStsKy/PrjStsNm
-        public int IsActive { get; set; } = 1;
+        public int IsPrint { get; set; } 
+        public int IsActive { get; set; } 
         public int IsApproved { get; set; }
         public int IsAllowTransaction { get; set; }
         public int IsParent { get; set; }
@@ -32,20 +33,48 @@ namespace BlueLotus360.Core.Domain.Entity.MastrerData
         public AccountResponse Account { get; set; } = new AccountResponse();
         public CodeBaseResponse BusinessUnit { get; set; } = new CodeBaseResponse();
         public CodeBaseResponse Location { get; set; } = new CodeBaseResponse();
-
-        public string? YourReference { get; set; }  
-
+        public CodeBaseResponse ProjectPrefix { get; set; } = new CodeBaseResponse();
+        public string? YourReference { get; set; }
+        public DateTime YourReferenceDate { get; set; } = DateTime.Now;
+        public int AccessLevelKey { get; set; } = 1;
+        public int ConFinLevelKey { get; set; } = 1;
+        public int OriginalProjectKey { get; set; } = 1;
+        public DateTime PlanStartDate { get; set; } = DateTime.Now;
+        public DateTime PlanFinishDate { get; set; } = DateTime.Now;
+        public DateTime ExpiryDate { get; set; }= DateTime.Now;
+        public AddressResponse ProjectRep { get; set; }=new AddressResponse();
+        public string? Description { get; set; } = "";
+        public string? Remark { get; set; } = "";
+        public AddressResponse Address2 { get; set; } = new AddressResponse();
+        public int BankKey { get; set; } = 1;
+        public int BranchKey { get; set; } = 1;
+        public string? TimeStamp { get; set; } = "";
 
     }
 
     public class ProjectResponse : BaseComboResponse
     {
         public long ProjectKey { get; set; } = 1;
-
         public string? ProjectName { get; set; } = "";
         public string? ProjectId { get; set; } = "";
 
         public DateTime ExpiryDate { get; set; }
 
+    }
+
+    public class ProjectOpenRequest
+    {
+        public long ProjectKey { get; set; } = 1;
+        public string? ProjectName { get; set; } = "";
+        public CodeBaseResponse ProjectType { get; set; } = new CodeBaseResponse();
+        public long ObjectKey { get; set; } = 1;
+        public int FromRow { get; set; } = 1;
+        public int ToRow { get; set; } = 1;
+        public string? ProjectCd { get; set; } = "";
+
+        public ProjectOpenRequest()
+        {
+            ProjectType=new CodeBaseResponse();
+        }
     }
 }

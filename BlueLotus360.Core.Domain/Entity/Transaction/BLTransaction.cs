@@ -33,7 +33,7 @@ namespace BlueLotus360.Core.Domain.Entity.Transaction
         public CodeBaseResponse ConfidentialLevel { get; set; } = new CodeBaseResponse();
         public CodeBaseResponse ApproveState { get; set; } = new CodeBaseResponse();
         public long ObjectKey { get; set; } = 1;
-        public ProjectResponse TransactionProject { get; set; }= new ProjectResponse(); 
+        public Project TransactionProject { get; set; }= new Project(); 
         public CodeBaseResponse BussinessUnit { get; set; } = new CodeBaseResponse();
         public long HeaderTransferLinkKey = 1;
         public long ContraAccountObjectKey { get; set; } = 1;

@@ -51,9 +51,11 @@ namespace BlueLotus360.Web.APIApplication.Services
             OH.IsApproved = 1;
             OH.OrderCategory1Key =(int)orderDetails.OrderCategory1.CodeKey;
             OH.OrderCategory2Key = (int)orderDetails.OrderCategory2.CodeKey;
+            OH.OrderCategory3Key = (int)orderDetails.OrderCategory3.CodeKey;
             OH.ProjectKey = (int)orderDetails.OrderProject.ProjectKey;
             OH.Code1Key = orderDetails.Cd1Ky;
             OH.AdrCat3Ky = (int)orderDetails.AddressCategory3.CodeKey;
+            OH.FromOrderKey= orderDetails.FromOrderKey;
 
             if (!BaseComboResponse.IsEntityWithDefaultValue(orderDetails.OrderAccount))
             {
@@ -115,6 +117,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.ItemTaxType5Per = item.ItemTaxType5Per;
                     lineItem.Remarks = item.Remark;
                     lineItem.Description = item.Description;
+                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;   
 
                     //   TotalDiscount += Math.Abs(item.GetLineDiscount()));
                     _unitOfWork.OrderRepository.CreateOrderLineItem(lineItem, company, user, new UIObject() { ObjectId = orderDetails.FormObjectKey });
@@ -161,6 +164,8 @@ namespace BlueLotus360.Web.APIApplication.Services
             OH.ApproveStatus = orderDetails.OrderApproveState;
             OH.AccountKey = 1;
             OH.Description = orderDetails.HeaderDescription;
+            OH.FromOrderKey = orderDetails.FromOrderKey;
+            OH.OrderCategory3Key = (int)orderDetails.OrderCategory3.CodeKey;
 
             if (!BaseComboResponse.IsEntityWithDefaultValue(orderDetails.OrderAccount))
             {
@@ -220,6 +225,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.ItemTaxType3Per = item.ItemTaxType3Per;
                     lineItem.ItemTaxType4Per = item.ItemTaxType4Per;
                     lineItem.ItemTaxType5Per = item.ItemTaxType5Per;
+                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;
 
                     _unitOfWork.OrderRepository.UpdateGenericOrderLineItem(lineItem, orderDetails.FormObjectKey, company, user);
                 }
@@ -259,6 +265,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.ItemTaxType3Per = item.ItemTaxType3Per;
                     lineItem.ItemTaxType4Per = item.ItemTaxType4Per;
                     lineItem.ItemTaxType5Per = item.ItemTaxType5Per;
+                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;
 
                     _unitOfWork.OrderRepository.CreateOrderLineItem(lineItem, company, user, new UIObject() { ObjectId = orderDetails.FormObjectKey });
                 }
@@ -356,6 +363,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.FromOrderDetailKey = item.FromOrderDetailKey;
                     lineItem.Remark = item.Remarks;
                     lineItem.Description = item.Description;
+                    
                     order.OrderItems.Add(lineItem);
                 }
 

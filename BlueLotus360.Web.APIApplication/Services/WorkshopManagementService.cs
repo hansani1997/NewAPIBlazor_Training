@@ -75,11 +75,13 @@ namespace BlueLotus360.Web.APIApplication.Services
             OH.IsApproved = 1;
             OH.OrderCategory1Key = (int)orderDetails.OrderCategory1.CodeKey;
             OH.OrderCategory2Key = (int)orderDetails.OrderCategory2.CodeKey;
+            OH.OrderCategory3Key = ((int)orderDetails.OrderCategory3.CodeKey);
             OH.ProjectKey = (int)orderDetails.OrderProject.ProjectKey;
             OH.Code1Key = orderDetails.Cd1Ky;
             OH.OrderStatusKey = (int)orderDetails.OrderStatus.CodeKey;
             OH.MeterReading = orderDetails.MeterReading;
             OH.DeliveryDate = orderDetails.DeliveryDate;
+            OH.FromOrderKey = orderDetails.FromOrderKey;
 
             if (!BaseComboResponse.IsEntityWithDefaultValue(orderDetails.OrderAccount))
             {
@@ -142,6 +144,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.Remarks = item.Remark;
                     lineItem.Description = item.Description;
                     lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
+                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;
 
                     //   TotalDiscount += Math.Abs(item.GetLineDiscount()));
                     _unitOfWork.OrderRepository.CreateOrderLineItem(lineItem, company, user, new UIObject() { ObjectId = orderDetails.FormObjectKey });
@@ -370,11 +373,14 @@ namespace BlueLotus360.Web.APIApplication.Services
             OH.Description = orderDetails.HeaderDescription;
             OH.OrderCategory1 = new CodeBaseResponse() { CodeKey= (int)orderDetails.OrderCategory1.CodeKey };
             OH.OrderCategory2 = new CodeBaseResponse() { CodeKey = (int)orderDetails.OrderCategory2.CodeKey };
+            OH.OrderCategory3 = new CodeBaseResponse() { CodeKey = (int)orderDetails.OrderCategory3.CodeKey };
             OH.ProjectKey = (int)orderDetails.OrderProject.ProjectKey;
             OH.Code1Key = orderDetails.Cd1Ky;
             OH.OrderStatus = orderDetails.OrderStatus;
             OH.MeterReading = orderDetails.MeterReading;
             OH.DeliveryDate = orderDetails.DeliveryDate;
+            OH.FromOrderKey = orderDetails.FromOrderKey;
+
             if (!BaseComboResponse.IsEntityWithDefaultValue(orderDetails.OrderAccount))
             {
                 OH.AccountKey = orderDetails.OrderAccount.AccountKey;
@@ -438,6 +444,8 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.ProjectKey= (int)orderDetails.OrderProject.ProjectKey;
                     lineItem.Description = item.Description;
                     lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
+                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;
+
 
 
                     _unitOfWork.OrderRepository.UpdateGenericOrderLineItem(lineItem, orderDetails.FormObjectKey, company, user);
@@ -482,6 +490,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.BussinessUnitKey = (int)item.BussinessUnit.CodeKey;
                     lineItem.Description = item.Description;
                     lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
+                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;
 
                     _unitOfWork.OrderRepository.CreateOrderLineItem(lineItem, company, user, new UIObject() { ObjectId = orderDetails.FormObjectKey });
                 }
@@ -752,7 +761,7 @@ namespace BlueLotus360.Web.APIApplication.Services
             order.OrderApproveState = _unitOfWork.OrderRepository.OrderApproveStatusFindByOrdKy(company, user, order.FormObjectKey, order.OrderKey);
             order.OrderCategory1 = responses.OrderCategory1;    
             order.OrderCategory2 = responses.OrderCategory2;
-            order.OrderProject=new ProjectResponse() { ProjectKey=responses.ProjectKey};
+            order.OrderProject=new Project() { ProjectKey=responses.ProjectKey};
             order.OrderStatus = responses.OrderStatus;
             order.MeterReading=responses.MeterReading;
             order.DeliveryDate=responses.DeliveryDate;

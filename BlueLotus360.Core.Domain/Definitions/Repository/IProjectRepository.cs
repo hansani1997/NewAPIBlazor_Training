@@ -11,5 +11,7 @@ namespace BlueLotus360.Core.Domain.Definitions.Repository
     public  interface IProjectRepository
     {
         ProjectResponse CreateProjectHeader(Company company,User user,Project project);
+        ProjectResponse UpdateProjectHeader(Company company, User user, Project request);
+        Project SelectProjectHeader(Company company, User user, ProjectOpenRequest request);
     }
 }

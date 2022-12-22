@@ -151,8 +151,8 @@ namespace BlueLotus360.Data.SQL92.Repository
                         order.OrderNumber = reader.GetColumn<string>("OrdNo");
                         order.OrderType = new CodeBaseResponse();
                         order.OrderType.CodeName = reader.GetColumn<string>("Type");
-                        order.OrderFinishDate = reader.GetColumn<DateTime>("FinDt");
-                        order.OrderDate = reader.GetColumn<DateTime>("PrjStDt");
+                        order.OrderProject.ProjectEndDate = reader.GetColumn<DateTime>("FinDt");
+                        order.OrderProject.ProjectStartDate = reader.GetColumn<DateTime>("PrjStDt");
                         order.OrderStatus = new CodeBaseResponse(); 
                         order.OrderStatus.CodeName = reader.GetColumn<string>("Status");
                         order.TrnKy= reader.GetColumn<int>("InvoiceTrnKy");

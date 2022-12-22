@@ -11,5 +11,7 @@ namespace BlueLotus360.Web.APIApplication.Definitions.ServiceDefinitions
     public interface IProjectService
     {
         ProjectResponse InsertProject(Company company,User user,Project project);
+        ProjectResponse EditProject(Company company, User user, Project project);
+        Project SelectProject(Company company, User user, ProjectOpenRequest project);
     }
 }
