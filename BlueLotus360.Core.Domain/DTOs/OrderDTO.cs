@@ -38,7 +38,7 @@ namespace BlueLotus360.Core.Domain.DTOs
         public CodeBaseResponse OrderCategory3 { get; set; }
         public CodeBaseResponse OrderStatus { get; set; }
         public CodeBaseResponse OrderControlCondition { get; set; }
-        public Project OrderProject { get; set; }
+        public ProjectResponse OrderProject { get; set; }
         public int Cd1Ky { get; set; } = 1;
         public decimal MeterReading { get; set; }
         public User EnteredUser { get; set; }
@@ -62,7 +62,7 @@ namespace BlueLotus360.Core.Domain.DTOs
             OrderCategory1=new CodeBaseResponse();
             OrderCategory2=new CodeBaseResponse();
             OrderCategory3 = new CodeBaseResponse();
-            OrderProject =new Project();
+            OrderProject =new ProjectResponse();
             OrderStatus = new CodeBaseResponse();
             OrderControlCondition=new CodeBaseResponse();
             EnteredUser = new User();

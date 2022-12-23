@@ -761,7 +761,7 @@ namespace BlueLotus360.Web.APIApplication.Services
             order.OrderApproveState = _unitOfWork.OrderRepository.OrderApproveStatusFindByOrdKy(company, user, order.FormObjectKey, order.OrderKey);
             order.OrderCategory1 = responses.OrderCategory1;    
             order.OrderCategory2 = responses.OrderCategory2;
-            order.OrderProject=new Project() { ProjectKey=responses.ProjectKey};
+            order.OrderProject=new ProjectResponse() { ProjectKey=responses.ProjectKey};
             order.OrderStatus = responses.OrderStatus;
             order.MeterReading=responses.MeterReading;
             order.DeliveryDate=responses.DeliveryDate;
