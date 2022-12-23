@@ -217,4 +217,35 @@ namespace BlueLotus360.Core.Domain.Entity.Transaction
         public int IsuLocKy { get; set; } = 1;
         public int TrnUnitKy { get; set; } = 1;
     }
+
+    public class RecieptDetailRequest
+    {
+        public long TransactionKey { get; set; } = 1;
+        public long ElementKey { get; set; } = 1;
+
+
+    }
+
+    public class RecieptDetailResponse
+    {
+        public string? TransactionType { get; set; } = "";
+        public string? TransactionNumber { get; set; }
+        public decimal InvoiceAmaount { get; set; }
+        public decimal SetOffAmount { get; set; }
+        public decimal TotalSetOffAmount { get; set; }
+        public decimal BalanceAmount { get; set; }
+        public long CreditAccountTransactioKey { get; set; } = 1;
+        public long DebitAccountTransactioKey { get; set; } = 1;
+        public CodeBaseResponse PayementTerm { get; set; }
+        public AddressResponse RepAddress { get; set; }
+        public int LineNumber { get; set; }
+
+        public RecieptDetailResponse()
+        {
+            PayementTerm=new CodeBaseResponse();
+            RepAddress=new AddressResponse();   
+        }
+
+
+    }
 }
