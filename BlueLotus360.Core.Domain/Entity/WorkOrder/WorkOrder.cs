@@ -59,7 +59,9 @@ namespace BlueLotus360.Core.Domain.Entity.WorkOrder
         public IList<GenericOrderItem> WorkOrderServices { get; set; }
         public IList<WorkOrder> JobHistory { get; set; }
         public BLTransaction WorkOrderTransaction { get; set; }
-		public WorkOrder()
+        public int MaterialRequsitionKey { get; set; } = 1;
+        public string? MaterialRequsitionNo { get; set; } = "";
+        public WorkOrder()
         {
             SelectedVehicle = new Vehicle();
             Department = new CodeBaseResponse();

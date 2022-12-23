@@ -57,7 +57,8 @@ namespace BlueLotus360.Core.Domain.Entity.MastrerData
         public long ProjectKey { get; set; } = 1;
         public string? ProjectName { get; set; } = "";
         public string? ProjectId { get; set; } = "";
-
+        public DateTime ProjectStartDate { get; set; } = DateTime.Now;
+        public DateTime ProjectEndDate { get; set; } = DateTime.Now;
         public DateTime ExpiryDate { get; set; }
 
     }

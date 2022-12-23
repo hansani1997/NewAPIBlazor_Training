@@ -144,7 +144,8 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.Remarks = item.Remark;
                     lineItem.Description = item.Description;
                     lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
-                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;
+                    lineItem.FromOrderDetailKey = item.FromOrderDetailKey;
+                    //lineItem.FrmOrdDetKy = item.FromOrderDetKy;
 
                     //   TotalDiscount += Math.Abs(item.GetLineDiscount()));
                     _unitOfWork.OrderRepository.CreateOrderLineItem(lineItem, company, user, new UIObject() { ObjectId = orderDetails.FormObjectKey });
@@ -405,7 +406,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.OrderDate = OH.OrderDate;
                     lineItem.FromOrderDetailKey = item.FromOrderDetailKey;
                     lineItem.OrderType = new CodeBaseResponse();
-                    lineItem.OrderType.CodeKey = item.OrderType.CodeKey;
+                    lineItem.OrderType.CodeKey = OH.OrderType.CodeKey;// item.OrderType.CodeKey;
                     lineItem.TransactionQuantity = item.TransactionQuantity;
                     lineItem.Rate = _unitOfWork.ItemRepository.GetCostPriceByLocAndItmKy(company, new CodeBaseResponse((int)orderDetails.OrderLocation.CodeKey), DateTime.Now, item.TransactionItem.ItemKey);
                     lineItem.TransactionRate = item.TransactionRate;
@@ -444,7 +445,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.ProjectKey= (int)orderDetails.OrderProject.ProjectKey;
                     lineItem.Description = item.Description;
                     lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
-                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;
+                   // lineItem.FrmOrdDetKy = item.FromOrderDetKy;
 
 
 
@@ -490,7 +491,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.BussinessUnitKey = (int)item.BussinessUnit.CodeKey;
                     lineItem.Description = item.Description;
                     lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
-                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;
+                    //lineItem.FrmOrdDetKy = item.FromOrderDetKy;
 
                     _unitOfWork.OrderRepository.CreateOrderLineItem(lineItem, company, user, new UIObject() { ObjectId = orderDetails.FormObjectKey });
                 }

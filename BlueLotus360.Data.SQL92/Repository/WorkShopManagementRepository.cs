@@ -70,6 +70,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         vehicle.PreviousMilage= reader.GetColumn<decimal>("Milage");
                         vehicle.VehicleRegisterDate = reader.GetColumn<DateTime>("RegDt");
                         vehicle.Province = new CodeBaseResponse() { CodeKey = reader.GetColumn<int>("AdrCat4Ky"), CodeName = reader.GetColumn<string>("ProvinceNm") };
+                        vehicle.VehicleWarrannty = new Warranty() { WarrantyStartDate = reader.GetColumn<DateTime>("WrntStDt"),WarrantyEndDate = reader.GetColumn<DateTime>("WrntEndDate") };
                         list.Add(vehicle);
                     }
                     response.ExecutionEnded = DateTime.UtcNow;
@@ -151,14 +152,16 @@ namespace BlueLotus360.Data.SQL92.Repository
                         order.OrderNumber = reader.GetColumn<string>("OrdNo");
                         order.OrderType = new CodeBaseResponse();
                         order.OrderType.CodeName = reader.GetColumn<string>("Type");
-                        //order.OrderProject.ProjectEndDate = reader.GetColumn<DateTime>("FinDt");
-                        //order.OrderProject.ProjectStartDate = reader.GetColumn<DateTime>("PrjStDt");
+                        order.OrderProject.ProjectEndDate = reader.GetColumn<DateTime>("FinDt");
+                        order.OrderProject.ProjectStartDate = reader.GetColumn<DateTime>("PrjStDt");
                         order.OrderStatus = new CodeBaseResponse(); 
                         order.OrderStatus.CodeName = reader.GetColumn<string>("Status");
                         order.TrnKy= reader.GetColumn<int>("InvoiceTrnKy");
                         order.OrderCategory1 = new CodeBaseResponse() { CodeKey= reader.GetColumn<int>("OrdCat1Ky") ,CodeName= reader.GetColumn<string>("OrdCat1") };
                         order.WorkOrderSimpleEstimation=new Estimation() { EstimateKey= reader.GetColumn<int>("EstimateKy"),EstimationNumber= reader.GetColumn<string>("EstimateNo")??"" };
                         order.IsActive = reader.GetColumn<int>("isAct");
+                        order.MaterialRequsitionKey= reader.GetColumn<int>("MatReqKy");
+                        order.MaterialRequsitionNo= reader.GetColumn<string>("MatReqNo")??"";
                         list.Add(order);
                     }
                     response.ExecutionEnded = DateTime.UtcNow;

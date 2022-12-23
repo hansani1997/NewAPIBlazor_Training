@@ -216,7 +216,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@PrjKy", item.ProjectKey);
                     dbCommand.CreateAndAddParameter("@Anl2Ky", (int)item.AnalysisType2.CodeKey);
 					dbCommand.CreateAndAddParameter("@Anl4Ky", (int)item.AnalysisType4.CodeKey);
-                    dbCommand.CreateAndAddParameter("@FrmOrdDetKy", item.FrmOrdDetKy);
+                    dbCommand.CreateAndAddParameter("@FrmOrdDetKy", item.FromOrderDetailKey);
 
                     //  dbCommand.CreateAndAddParameter("ItmPrpKy", item.ItemProperty1);
 
@@ -555,7 +555,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@ObjKy", ObjKy);
                     dbCommand.CreateAndAddParameter("@isTransfer", item.IsTransfer);
                     dbCommand.CreateAndAddParameter("@isConfirmed", item.IsConfirmed);
-                    dbCommand.CreateAndAddParameter("@FrmOrdDetKy", item.FrmOrdDetKy);//changed this FromOrderDetailKey to FrmOrdDetKy
+                    dbCommand.CreateAndAddParameter("@FrmOrdDetKy", item.FromOrderDetailKey);//changed this FromOrderDetailKey to FrmOrdDetKy
                     dbCommand.CreateAndAddParameter("@TrnPri", item.TransactionPrice);
                     dbCommand.CreateAndAddParameter("@OrgQty", item.OriginalQuantity);
                     dbCommand.CreateAndAddParameter("@PrjKy", item.ProjectKey);

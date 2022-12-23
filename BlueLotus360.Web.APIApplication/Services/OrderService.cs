@@ -117,7 +117,8 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.ItemTaxType5Per = item.ItemTaxType5Per;
                     lineItem.Remarks = item.Remark;
                     lineItem.Description = item.Description;
-                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;   
+                    lineItem.FromOrderDetailKey= item.FromOrderDetailKey;   
+                    //lineItem.FrmOrdDetKy = item.FromOrderDetKy;   
 
                     //   TotalDiscount += Math.Abs(item.GetLineDiscount()));
                     _unitOfWork.OrderRepository.CreateOrderLineItem(lineItem, company, user, new UIObject() { ObjectId = orderDetails.FormObjectKey });
@@ -225,7 +226,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.ItemTaxType3Per = item.ItemTaxType3Per;
                     lineItem.ItemTaxType4Per = item.ItemTaxType4Per;
                     lineItem.ItemTaxType5Per = item.ItemTaxType5Per;
-                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;
+                    //lineItem.FrmOrdDetKy = item.FromOrderDetKy;
 
                     _unitOfWork.OrderRepository.UpdateGenericOrderLineItem(lineItem, orderDetails.FormObjectKey, company, user);
                 }
@@ -265,7 +266,8 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.ItemTaxType3Per = item.ItemTaxType3Per;
                     lineItem.ItemTaxType4Per = item.ItemTaxType4Per;
                     lineItem.ItemTaxType5Per = item.ItemTaxType5Per;
-                    lineItem.FrmOrdDetKy = item.FromOrderDetKy;
+                    //lineItem.FrmOrdDetKy = item.FromOrderDetKy;
+
 
                     _unitOfWork.OrderRepository.CreateOrderLineItem(lineItem, company, user, new UIObject() { ObjectId = orderDetails.FormObjectKey });
                 }
