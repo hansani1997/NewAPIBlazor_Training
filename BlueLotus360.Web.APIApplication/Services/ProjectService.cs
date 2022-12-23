@@ -21,6 +21,10 @@ namespace BlueLotus360.Web.APIApplication.Services
 
         public ProjectResponse InsertProject(Company company, User user, Project project)
         {
+            if (project.ParentKey<=0)
+            {
+                project.ParentKey = 1;
+            }
             return _unitOfWork.ProjectRepository.CreateProjectHeader(company, user, project); 
         }
         public ProjectResponse EditProject(Company company, User user, Project project)

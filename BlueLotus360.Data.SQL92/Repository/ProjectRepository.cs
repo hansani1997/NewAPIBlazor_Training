@@ -303,6 +303,8 @@ namespace BlueLotus360.Data.SQL92.Repository
                         response.AccessLevelKey = reader.GetColumn<int>("AcsLvlKy");
                         response.ConFinLevelKey = reader.GetColumn<int>("ConFinLvlKy");
                         response.AccessLevelKey = reader.GetColumn<int>("AcsLvlKy");
+                        response.Alias= reader.GetColumn<string>("Alias")??"";
+                        response.YourReference = reader.GetColumn<string>("YurRef")??"";
 
                     }
 
