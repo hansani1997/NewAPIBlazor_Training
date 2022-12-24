@@ -2,6 +2,7 @@
 using BlueLotus360.Core.Domain.Entity.Base;
 using BlueLotus360.Core.Domain.Entity.BookingModule;
 using BlueLotus360.Core.Domain.Entity.MastrerData;
+using BlueLotus360.Core.Domain.Entity.Order;
 using BlueLotus360.Core.Domain.Entity.WorkOrder;
 using BlueLotus360.Core.Domain.Responses;
 using System;
@@ -20,5 +21,6 @@ namespace BlueLotus360.Core.Domain.Definitions.Repository
         BaseServerResponse<IList<BookingDetails>> RecentBookingDetails(Vehicle dto, Company company, User user);
         UserRequestValidation WorkOrderValidation(WorkOrder dto, Company company, User user);
         BaseServerResponse<IList<IRNResponse>> SelectIRNBasedOnStatus(WorkOrder dto, Company company, User user);
+        OrderSaveResponse CarOrdToOrdPosting(CarOrdToOrdPostingRequest dto, Company company, User user);
     }
 }

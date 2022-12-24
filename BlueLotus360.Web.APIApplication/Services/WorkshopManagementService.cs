@@ -1018,5 +1018,10 @@ namespace BlueLotus360.Web.APIApplication.Services
             return IRNs;
         }
 
+        public OrderSaveResponse CarOrdToOrdPosting(CarOrdToOrdPostingRequest dto, Company company, User user)
+        {
+           return _unitOfWork.WorkShopManagementRepository.CarOrdToOrdPosting(dto,company,user);
+        }
+
     }
 }

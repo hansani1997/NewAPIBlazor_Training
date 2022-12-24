@@ -148,6 +148,14 @@ namespace BlueLotus360.Core.Domain.Entity.WorkOrder
 
     }
 
+    public class CarOrdToOrdPostingRequest
+    {
+        public int FromOrderKey { get; set; } = 1;
+        public int ToOrderKey { get; set; } = 1;
+        public CodeBaseResponse ToOrderType { get; set; } = new CodeBaseResponse();
+        public long ElementKey { get; set; } = 1;
+    }
+
     public class IRNResponse
     {
         public long OrderKey { get; set; }

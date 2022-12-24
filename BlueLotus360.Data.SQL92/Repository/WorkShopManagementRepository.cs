@@ -3,6 +3,7 @@ using BlueLotus360.Core.Domain.DTOs;
 using BlueLotus360.Core.Domain.Entity.Base;
 using BlueLotus360.Core.Domain.Entity.BookingModule;
 using BlueLotus360.Core.Domain.Entity.MastrerData;
+using BlueLotus360.Core.Domain.Entity.Order;
 using BlueLotus360.Core.Domain.Entity.WorkOrder;
 using BlueLotus360.Core.Domain.Responses;
 using BlueLotus360.Data.SQL92.Definition;
@@ -547,7 +548,77 @@ namespace BlueLotus360.Data.SQL92.Repository
                 return response;
             }
         }
-		public CodeBaseResponse GetCdMasByCdKy(int cdKy)
+
+        public OrderSaveResponse CarOrdToOrdPosting(CarOrdToOrdPostingRequest dto, Company company, User user)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                IDataReader reader = null;
+                OrderSaveResponse response = new OrderSaveResponse();
+                string SPName = "CAROrdToOrd_PostWeb";
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("CKy", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("UsrKy", user.UserKey);
+                    dbCommand.CreateAndAddParameter("ObjKy", dto.ElementKey);
+                    dbCommand.CreateAndAddParameter("FrmOrdKy",dto.FromOrderKey);
+                    dbCommand.CreateAndAddParameter("ToOrdKy", dto.ToOrderKey);
+                    dbCommand.CreateAndAddParameter("ToOrdTypKy",BaseComboResponse.GetKeyValue(dto.ToOrderType));
+
+                    
+                    dbCommand.Connection.Open();
+                    reader = dbCommand.ExecuteReader();
+
+                    
+                    while (reader.Read())
+                    {
+                        response.OrderKey= reader.GetColumn<int>("OrdKy");
+                    }
+
+                    if (!reader.IsClosed)
+                    {
+                        reader.Close();
+                    }
+
+
+
+
+                }
+                catch (Exception exp)
+                {
+                   
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+                    if (reader != null)
+                    {
+                        if (!reader.IsClosed)
+                        {
+                            reader.Close();
+                        }
+                    }
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    if (reader != null)
+                    {
+                        reader.Dispose();
+                    }
+
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+
+                }
+
+                return response;
+            }
+        }
+        public CodeBaseResponse GetCdMasByCdKy(int cdKy)
 		{
 			using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
 			{
