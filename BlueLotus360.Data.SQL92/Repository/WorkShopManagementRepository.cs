@@ -3,6 +3,7 @@ using BlueLotus360.Core.Domain.DTOs;
 using BlueLotus360.Core.Domain.Entity.Base;
 using BlueLotus360.Core.Domain.Entity.BookingModule;
 using BlueLotus360.Core.Domain.Entity.MastrerData;
+using BlueLotus360.Core.Domain.Entity.Order;
 using BlueLotus360.Core.Domain.Entity.WorkOrder;
 using BlueLotus360.Core.Domain.Responses;
 using BlueLotus360.Data.SQL92.Definition;
@@ -51,25 +52,26 @@ namespace BlueLotus360.Data.SQL92.Repository
                         vehicle.VehicleAddress.AddressKey = reader.GetColumn<int>("VehAdrKy");
                         vehicle.VehicleRegistration = new ItemResponse();
                         vehicle.VehicleRegistration.ItemKey= reader.GetColumn<int>("VehItmKy");
-                        vehicle.VehicleRegistration.ItemCode= reader.GetColumn<string>("VehicleNo");
+                        vehicle.VehicleRegistration.ItemCode= reader.GetColumn<string>("VehicleNo")??"";
                         vehicle.RegisteredCustomer = new AddressMaster();
                         vehicle.RegisteredCustomer.AddressKey = reader.GetColumn<int>("CusAdrKy");
-                        vehicle.RegisteredCustomer.AddressName = reader.GetColumn<string>("CusNm");
-                        vehicle.RegisteredCustomer.NIC= reader.GetColumn<string>("NIC");
-                        vehicle.RegisteredCustomer.AddressId= reader.GetColumn<string>("Mobile");
-                        vehicle.RegisteredCustomer.Address = reader.GetColumn<string>("Address");
-                        vehicle.RegisteredCustomer.Email= reader.GetColumn<string>("Email");
+                        vehicle.RegisteredCustomer.AddressName = reader.GetColumn<string>("CusNm") ?? "";
+                        vehicle.RegisteredCustomer.NIC= reader.GetColumn<string>("NIC") ?? "";
+                        vehicle.RegisteredCustomer.AddressId= reader.GetColumn<string>("Mobile") ?? "";
+                        vehicle.RegisteredCustomer.Address = reader.GetColumn<string>("Address") ?? "";
+                        vehicle.RegisteredCustomer.Email= reader.GetColumn<string>("Email") ?? "";
                         vehicle.SerialNumber=new ItemSerialNumber();
-                        vehicle.SerialNumber.SerialNumber= reader.GetColumn<string>("ChassisNo");
-                        vehicle.SerialNumber.EngineNumber= reader.GetColumn<string>("EnginNo");
-                        vehicle.Brand = new CodeBaseResponse() { CodeKey = reader.GetColumn<int>("BrandKy") ,CodeName= reader.GetColumn<string>("Brand") };
-                        vehicle.Model= new CodeBaseResponse() { CodeKey = reader.GetColumn<int>("ModelKy"), CodeName = reader.GetColumn<string>("Model") };
-                        vehicle.Category=new CodeBaseResponse() { CodeKey = reader.GetColumn<int>("AdrCat1Ky"), CodeName = reader.GetColumn<string>("Category") };
-                        vehicle.SubCategory = new CodeBaseResponse() { CodeKey = reader.GetColumn<int>("AdrCat2Ky"), CodeName = reader.GetColumn<string>("SubCategory") };
-                        vehicle.Fuel= reader.GetColumn<string>("FuelTyp");
+                        vehicle.SerialNumber.SerialNumber= reader.GetColumn<string>("ChassisNo") ?? "";
+                        vehicle.SerialNumber.EngineNumber= reader.GetColumn<string>("EnginNo") ?? "";
+                        vehicle.Brand = new CodeBaseResponse() { CodeKey = reader.GetColumn<int>("BrandKy") ,CodeName= reader.GetColumn<string>("Brand") ?? "" };
+                        vehicle.Model= new CodeBaseResponse() { CodeKey = reader.GetColumn<int>("ModelKy"), CodeName = reader.GetColumn<string>("Model") ?? "" };
+                        vehicle.Category=new CodeBaseResponse() { CodeKey = reader.GetColumn<int>("AdrCat1Ky"), CodeName = reader.GetColumn<string>("Category") ?? "" };
+                        vehicle.SubCategory = new CodeBaseResponse() { CodeKey = reader.GetColumn<int>("AdrCat2Ky"), CodeName = reader.GetColumn<string>("SubCategory") ?? "" };
+                        vehicle.Fuel= reader.GetColumn<string>("FuelTyp") ?? "";
                         vehicle.PreviousMilage= reader.GetColumn<decimal>("Milage");
                         vehicle.VehicleRegisterDate = reader.GetColumn<DateTime>("RegDt");
-                        vehicle.Province = new CodeBaseResponse() { CodeKey = reader.GetColumn<int>("AdrCat4Ky"), CodeName = reader.GetColumn<string>("ProvinceNm") };
+                        vehicle.Province = new CodeBaseResponse() { CodeKey = reader.GetColumn<int>("AdrCat4Ky"), CodeName = reader.GetColumn<string>("ProvinceNm") ?? "" };
+                        vehicle.VehicleWarrannty = new Warranty() { WarrantyStartDate = reader.GetColumn<DateTime>("WrntStDt"),WarrantyEndDate = reader.GetColumn<DateTime>("WrntEndDate") };
                         list.Add(vehicle);
                     }
                     response.ExecutionEnded = DateTime.UtcNow;
@@ -151,14 +153,16 @@ namespace BlueLotus360.Data.SQL92.Repository
                         order.OrderNumber = reader.GetColumn<string>("OrdNo");
                         order.OrderType = new CodeBaseResponse();
                         order.OrderType.CodeName = reader.GetColumn<string>("Type");
-                        order.OrderFinishDate = reader.GetColumn<DateTime>("FinDt");
-                        order.OrderDate = reader.GetColumn<DateTime>("PrjStDt");
+                        order.OrderProject.ProjectEndDate = reader.GetColumn<DateTime>("FinDt");
+                        order.OrderProject.ProjectStartDate = reader.GetColumn<DateTime>("PrjStDt");
                         order.OrderStatus = new CodeBaseResponse(); 
                         order.OrderStatus.CodeName = reader.GetColumn<string>("Status");
                         order.TrnKy= reader.GetColumn<int>("InvoiceTrnKy");
                         order.OrderCategory1 = new CodeBaseResponse() { CodeKey= reader.GetColumn<int>("OrdCat1Ky") ,CodeName= reader.GetColumn<string>("OrdCat1") };
                         order.WorkOrderSimpleEstimation=new Estimation() { EstimateKey= reader.GetColumn<int>("EstimateKy"),EstimationNumber= reader.GetColumn<string>("EstimateNo")??"" };
                         order.IsActive = reader.GetColumn<int>("isAct");
+                        order.MaterialRequsitionKey= reader.GetColumn<int>("MatReqKy");
+                        order.MaterialRequsitionNo= reader.GetColumn<string>("MatReqNo")??"";
                         list.Add(order);
                     }
                     response.ExecutionEnded = DateTime.UtcNow;
@@ -544,7 +548,77 @@ namespace BlueLotus360.Data.SQL92.Repository
                 return response;
             }
         }
-		public CodeBaseResponse GetCdMasByCdKy(int cdKy)
+
+        public OrderSaveResponse CarOrdToOrdPosting(CarOrdToOrdPostingRequest dto, Company company, User user)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                IDataReader reader = null;
+                OrderSaveResponse response = new OrderSaveResponse();
+                string SPName = "CAROrdToOrd_PostWeb";
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("CKy", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("UsrKy", user.UserKey);
+                    dbCommand.CreateAndAddParameter("ObjKy", dto.ElementKey);
+                    dbCommand.CreateAndAddParameter("FrmOrdKy",dto.FromOrderKey);
+                    dbCommand.CreateAndAddParameter("ToOrdKy", dto.ToOrderKey);
+                    dbCommand.CreateAndAddParameter("ToOrdTypKy",BaseComboResponse.GetKeyValue(dto.ToOrderType));
+
+                    
+                    dbCommand.Connection.Open();
+                    reader = dbCommand.ExecuteReader();
+
+                    
+                    while (reader.Read())
+                    {
+                        response.OrderKey= reader.GetColumn<int>("OrdKy");
+                    }
+
+                    if (!reader.IsClosed)
+                    {
+                        reader.Close();
+                    }
+
+
+
+
+                }
+                catch (Exception exp)
+                {
+                   
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+                    if (reader != null)
+                    {
+                        if (!reader.IsClosed)
+                        {
+                            reader.Close();
+                        }
+                    }
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    if (reader != null)
+                    {
+                        reader.Dispose();
+                    }
+
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+
+                }
+
+                return response;
+            }
+        }
+        public CodeBaseResponse GetCdMasByCdKy(int cdKy)
 		{
 			using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
 			{

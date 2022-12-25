@@ -218,5 +218,15 @@ namespace BlueLotus360.Web.API.Controllers
 
         }
 
+        [HttpPost("orderToOrderPosting")]
+        public IActionResult WorkOrderToOrderPosting(CarOrdToOrdPostingRequest request)
+        {
+            var user = Request.GetAuthenticatedUser();
+            var company = Request.GetAssignedCompany();
+            var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, request.ToOrderType.OurCode, "OrdTyp");
+            request.ToOrderType = ordTyp.Value;
+            OrderSaveResponse res=_workshopManagementService.CarOrdToOrdPosting(request, company, user);
+            return Ok(res);
+        }
     }
 }

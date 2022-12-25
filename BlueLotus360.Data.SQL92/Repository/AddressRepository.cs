@@ -241,6 +241,8 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@RegNo", addressMaster.RegistraionNumber);
                     dbCommand.CreateAndAddParameter("@ChassiNo", addressMaster.ChassiNumber);
                     dbCommand.CreateAndAddParameter("@NIC", addressMaster.NIC);
+                    dbCommand.CreateAndAddParameter("@CusAdrKy",BaseComboResponse.GetKeyValue(addressMaster.ExistingCustomer));
+                    dbCommand.CreateAndAddParameter("@VehAdrKy",BaseComboResponse.GetKeyValue(addressMaster.ExistingVehicle));
 
                     response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();

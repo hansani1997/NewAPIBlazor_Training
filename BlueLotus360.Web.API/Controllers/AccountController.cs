@@ -1,5 +1,6 @@
 ﻿using BlueLotus360.Core.Domain.DTOs.RequestDTO;
 using BlueLotus360.Core.Domain.Entity.Base;
+using BlueLotus360.Core.Domain.Entity.Payment;
 using BlueLotus360.Web.API.Authentication;
 using BlueLotus360.Web.API.Extension;
 using BlueLotus360.Web.APIApplication.Definitions.ServiceDefinitions;
@@ -30,6 +31,21 @@ namespace BlueLotus360.Web.API.Controllers
 
             var result = _accountService.GetComboAccounts(company, user, comboRequest);
             IList<AccountResponse> accounts = result.Value;
+
+            return Ok(accounts);
+        }
+
+        [HttpPost("GetAccMappingByPaymentType")]
+        public IActionResult GetAccMappingByPaymentType(AccPaymentMappingRequest request)
+        {
+            var user = Request.GetAuthenticatedUser();
+            var company = Request.GetAssignedCompany();
+
+            IList<AccPaymentMappingResponse> accounts = null;
+            accounts = _accountService.GetAccPaymentMappingLaund(company,user, request);
+
+
+
 
             return Ok(accounts);
         }
