@@ -138,7 +138,7 @@ namespace BlueLotus360.Core.Domain.Entity
         public decimal ItemQuantity { get; set; }
         public decimal TransactionPrice { get; set; }
         public decimal BaseTotalPrice { get; set; }
-        public decimal ItemDiscount { get; set; }
+        public decimal ItemDiscount { get; set; } = 0;
         public string SpecialInstructions { get; set; } = ""; //item comment
         public bool IsComposite { get; set; }
         public bool IsModifier { get; set; }
