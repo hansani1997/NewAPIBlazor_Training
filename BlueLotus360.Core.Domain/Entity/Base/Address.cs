@@ -25,14 +25,14 @@ namespace BlueLotus360.Core.Domain.Entity.Base
     {
         public long ElementKey { get; set; }
 
-        public string? Email { get; set; }
-        public string? City { get; set; }
-        public string? Address { get; set; }
-        public string? NIC { get; set; }
+        public string? Email { get; set; } = "";
+        public string? City { get; set; } = "";
+        public string? Address { get; set; } = "";
+        public string? NIC { get; set; } = "";
         public CodeBaseResponse AddressPrefix { get; set; } = new CodeBaseResponse();
         public decimal VAT { get; set; }
         public decimal SVAT { get; set; }
-        public string? Mobile { get; set; }
+        public string? Mobile { get; set; } = "";
         public string? PostalAddress { get; set; } = "";
         public CodeBaseResponse AddressType { get; set; } = new CodeBaseResponse();
         public AddressResponse ExistingCustomer { get; set; }=new AddressResponse();
@@ -40,15 +40,15 @@ namespace BlueLotus360.Core.Domain.Entity.Base
         public AddressResponse ExistingVehicle { get; set; } = new AddressResponse();
         public DateTime RegistrationDate { get; set; } = DateTime.Now;
         public CodeBaseResponse Province { get; set; } = new CodeBaseResponse();
-        public string? RegistraionNumber { get; set; }
-        public string? ChassiNumber { get; set; }
+        public string? RegistraionNumber { get; set; } = "";
+        public string? ChassiNumber { get; set; } = "";
         public CodeBaseResponse Make { get; set; } = new CodeBaseResponse();
         public CodeBaseResponse Model { get; set; } = new CodeBaseResponse();
         public string? MakeYear { get; set; } = "";
         public CodeBaseResponse Category { get; set; } = new CodeBaseResponse();
         public CodeBaseResponse SubCategory { get; set; } = new CodeBaseResponse();
         public CodeBaseResponse MaintainPackage { get; set; } = new CodeBaseResponse();
-        public string? Message { get; set; }
+        public string? Message { get; set; } = "";
         public bool HasError { get; set; }
       
     }
