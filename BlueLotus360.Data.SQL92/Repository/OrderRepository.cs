@@ -910,6 +910,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         oorderV3.AnalysisType2.CodeKey = reader.GetColumn<int>("Anl2Ky");
                         oorderV3.AnalysisType2.Code = reader.GetColumn<string>("Anl2Cd");
 						oorderV3.AnalysisType4.CodeKey = reader.GetColumn<int>("Anl4Ky");
+                        oorderV3.AnalysisType4.CodeName = reader.GetColumn<string>("Anl4CdNm");
 						//carmrt and principle values customer amount
 
 						itemList.Add(oorderV3);
