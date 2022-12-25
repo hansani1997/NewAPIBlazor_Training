@@ -1,6 +1,8 @@
 ﻿using BlueLotus360.Core.Domain.Definitions.Repository;
 using BlueLotus360.Core.Domain.DTOs.RequestDTO;
 using BlueLotus360.Core.Domain.Entity.Base;
+using BlueLotus360.Core.Domain.Entity.Payment;
+using BlueLotus360.Core.Domain.Entity.UberEats;
 using BlueLotus360.Core.Domain.Responses;
 using BlueLotus360.Data.SQL92.Definition;
 using BlueLotus360.Data.SQL92.Extenstions;
@@ -211,6 +213,115 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbConnection.Dispose();
                 }
                 return response;
+            }
+        }
+
+        public IList<AccPaymentMappingResponse> GetAccPaymentMappingV1(Company company, User user, AccPaymentMappingRequest requestDTO)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                IDataReader dataReader = null;
+                string SPName= "PmtModeAccDefLaund_SelectWeb";
+                try
+                {
+                    IList<AccPaymentMappingResponse> accounts = new List<AccPaymentMappingResponse>();
+
+
+
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("@Cky", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("@UsrKy", user.UserKey);
+                    dbCommand.CreateAndAddParameter("@ObjKy", requestDTO.ELementKey);
+                    dbCommand.CreateAndAddParameter("@LocKy", requestDTO.Location.CodeKey);
+                    dbCommand.CreateAndAddParameter("@PmtTrmKy", requestDTO.PayementTerm.CodeKey);
+                    dbCommand.CreateAndAddParameter("@isLoadAll", requestDTO.LoadAll);
+                    dbCommand.Connection.Open();
+                    dataReader = dbCommand.ExecuteReader();
+                    AccPaymentMappingResponse mapping;
+                    while (dataReader.Read())
+                    {
+                        mapping = new AccPaymentMappingResponse();
+                        mapping.Account.AccountKey = dataReader.GetColumn<int>("AccKy");
+                        mapping.Account.AccountName = dataReader.GetColumn<string>("AccNm");
+                        mapping.PayementMode.CodeKey = dataReader.GetColumn<int>("PmtModeKy");
+                        mapping.PayementMode.CodeName = dataReader.GetColumn<string>("PmtMode");
+                        accounts.Add(mapping);
+                    }
+
+                    return accounts;
+
+                }
+                catch (Exception exp)
+                {
+                    throw new Exception("Error While Executing SP PmtModeAccDefLaund_SelectWeb", exp);
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+                    if (dataReader != null)
+                    {
+                        if (!dataReader.IsClosed)
+                        {
+                            dataReader.Close();
+                        }
+                    }
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    dataReader.Dispose();
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+                }
+
+            }
+        }
+
+        public void SaveAccountResponseExRepo(Company company, User user, PayementModeReciept payment)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                //IDataReader dataReader = null;
+                string SPName = "PSaleKyPmtModeWiseRecp_PostWeb";
+                try
+                {
+
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("@CKy", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("@UsrKy", user.UserKey);
+                    dbCommand.CreateAndAddParameter("@ObjKy", payment.ElementKey);
+                    dbCommand.CreateAndAddParameter("@Dt", payment.PayementDate);
+                    dbCommand.CreateAndAddParameter("@TrnKy", payment.TransactionKey);
+                    dbCommand.CreateAndAddParameter("@OurCd", payment.OurCode??"");
+                    dbCommand.CreateAndAddParameter("@PmtAmt", GetPayementModeRecieptTable(payment.Payements));
+                    dbCommand.Connection.Open();
+
+                    dbCommand.ExecuteNonQuery();
+
+
+
+                }
+                catch (Exception exp)
+                {
+                    throw exp;
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+                }
+
             }
         }
     }

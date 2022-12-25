@@ -32,5 +32,6 @@ namespace BlueLotus360.Web.APIApplication.Definitions.ServiceDefinitions
         BaseServerResponse<OrderSaveResponse> UpdateIRNOrder(Company company, User user, GenericOrder order);
         UserRequestValidation WorkorderValidation(WorkOrder dto, Company company, User user);
         IList<WorkOrder> GetIRNBasedOnStatus(WorkOrder dto, Company company, User user);
+        OrderSaveResponse CarOrdToOrdPosting(CarOrdToOrdPostingRequest dto, Company company, User user);
     }
 }

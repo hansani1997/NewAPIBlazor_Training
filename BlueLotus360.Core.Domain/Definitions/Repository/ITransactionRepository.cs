@@ -1,4 +1,5 @@
-﻿using BlueLotus360.Core.Domain.Entity.Base;
+﻿using BlueLotus360.Core.Domain.DTOs.RequestDTO;
+using BlueLotus360.Core.Domain.Entity.Base;
 using BlueLotus360.Core.Domain.Entity.Transaction;
 using BlueLotus360.Core.Domain.Responses;
 using System;
@@ -29,5 +30,6 @@ namespace BlueLotus360.Core.Domain.Definitions.Repository
         BaseServerResponse<TransactionPermission> GetIsALwAddUpdatePermissionForOrderTrn(Company company, User user, int objky = 1, int trnky = 1, int aprstsKy = 1);
         CodeBaseResponse TrnrApproveStatusFindByTrnKy(Company company, User user, int objky = 1, int trnky = 1);
         BaseServerResponse<IList<GenericTransactionLineItem>> GenericallyGetTransactionLineItemsV2(Company company, User user, TransactionOpenRequest request);
+        RecviedAmountResponse GetRecviedAmountResponse(Company company, User user, RecieptDetailRequest request);
     }
 }

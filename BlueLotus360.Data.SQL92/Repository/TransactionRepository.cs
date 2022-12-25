@@ -1,4 +1,5 @@
 ﻿using BlueLotus360.Core.Domain.Definitions.Repository;
+using BlueLotus360.Core.Domain.DTOs.RequestDTO;
 using BlueLotus360.Core.Domain.Entity.Base;
 using BlueLotus360.Core.Domain.Entity.MastrerData;
 using BlueLotus360.Core.Domain.Entity.Transaction;
@@ -1744,6 +1745,69 @@ namespace BlueLotus360.Data.SQL92.Repository
                 }
 
                 return approveState;
+            }
+        }
+
+        public RecviedAmountResponse GetRecviedAmountResponse(Company company, User user, RecieptDetailRequest request)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                RecviedAmountResponse amountResponse = new RecviedAmountResponse();
+                IDataReader reader = null;
+                string SPName = "PTrnKyRecvAmt_SelectWeb";
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("@Cky", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("@UsrKy", user.UserKey);
+                    dbCommand.CreateAndAddParameter("@ObjKy", request.ElementKey);
+                    dbCommand.CreateAndAddParameter("@TrnKy", request.TransactionKey);
+
+                    dbCommand.Connection.Open();
+                    reader = dbCommand.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        amountResponse.TotalPayedAmount = reader.GetColumn<decimal>("RecpAmt");
+                    }
+
+
+
+
+                }
+                catch (Exception exp)
+                {
+                    throw exp;
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+
+                    if (reader != null)
+                    {
+                        if (!reader.IsClosed)
+                        {
+                            reader.Close();
+                        }
+                        reader.Dispose();
+
+                    }
+
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+
+
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+                }
+                return amountResponse;
+
+
+
             }
         }
         private CodeBaseResponse GetCdMasByCdKy(int cdKy)

@@ -35,6 +35,7 @@ namespace BlueLotus360.Core.Domain.DTOs
         public CodeBaseResponse OrderPrefix { get; set; }
         public CodeBaseResponse OrderCategory1 { get; set; }
         public CodeBaseResponse OrderCategory2 { get; set; }
+        public CodeBaseResponse OrderCategory3 { get; set; }
         public CodeBaseResponse OrderStatus { get; set; }
         public CodeBaseResponse OrderControlCondition { get; set; }
         public ProjectResponse OrderProject { get; set; }
@@ -60,7 +61,8 @@ namespace BlueLotus360.Core.Domain.DTOs
             OrderPrefix = new CodeBaseResponse();
             OrderCategory1=new CodeBaseResponse();
             OrderCategory2=new CodeBaseResponse();
-            OrderProject=new ProjectResponse();
+            OrderCategory3 = new CodeBaseResponse();
+            OrderProject =new ProjectResponse();
             OrderStatus = new CodeBaseResponse();
             OrderControlCondition=new CodeBaseResponse();
             EnteredUser = new User();
@@ -130,7 +132,8 @@ namespace BlueLotus360.Core.Domain.DTOs
         public CodeBaseResponse AnalysisType1 { get; set; }
 		public CodeBaseResponse AnalysisType2 { get; set; }
 		public CodeBaseResponse AnalysisType4 { get; set; }
-		public GenericOrderItem()
+        public int FromOrderDetKy { get; set; } = 1;
+        public GenericOrderItem()
         {
             OrderLineLocation = new CodeBaseResponse();
             TransactionItem = new ItemResponse();
@@ -290,6 +293,7 @@ namespace BlueLotus360.Core.Domain.DTOs
         public decimal DohPercentage { get; set; }
         public int FromOrderDetailCmpnKey { get; set; } = 1;
         public int FromOrderDetailKey { get; set; } = 1;
+        public int FrmOrdDetKy { get; set; } = 1;
         public decimal GohPercentage { get; set; }
         public string GroupUuId { get; set; }
         public bool IsLineItemDirty { get; set; }

@@ -1,4 +1,5 @@
 ﻿using BlueLotus360.Core.Domain.Definitions.DataLayer;
+using BlueLotus360.Core.Domain.DTOs.RequestDTO;
 using BlueLotus360.Core.Domain.Entity.Base;
 using BlueLotus360.Core.Domain.Entity.Order;
 using BlueLotus360.Core.Domain.Entity.Transaction;
@@ -117,6 +118,16 @@ namespace BlueLotus360.Web.APIApplication.Services
         {
             var per = _unitOfWork.TransactionRepository.GetIsALwAddUpdatePermissionForOrderTrn(company,user, objky, trnky, aprstsky);
             return per.Value;
+        }
+
+        public RecviedAmountResponse GetRecviedAmountResponse(Company company, User user, RecieptDetailRequest request)
+        {
+            return _unitOfWork.TransactionRepository.GetRecviedAmountResponse(company,user,request);
+        }
+
+        public void SaveAccountResponseEx(Company company, User user, PayementModeReciept payementModeReciept)
+        {
+            _unitOfWork.AccountRepository.SaveAccountResponseExRepo(company,user,payementModeReciept);
         }
     }
 }

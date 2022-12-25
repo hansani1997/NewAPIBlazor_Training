@@ -89,11 +89,13 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("AccKy", orderHeader.AccountKey);
                     dbCommand.CreateAndAddParameter("OrdCat1", orderHeader.OrderCategory1Key);
                     dbCommand.CreateAndAddParameter("OrdCat2", orderHeader.OrderCategory2Key);
+                    dbCommand.CreateAndAddParameter("OrdCat3", orderHeader.OrderCategory3Key);
                     dbCommand.CreateAndAddParameter("PrjKy", orderHeader.ProjectKey);
                     dbCommand.CreateAndAddParameter("Cd1Ky", orderHeader.Code1Key);
                     dbCommand.CreateAndAddParameter("MeterReading",orderHeader.MeterReading);
                     dbCommand.CreateAndAddParameter("Adr2Ky", orderHeader.Insurance.AccountKey);
                     dbCommand.CreateAndAddParameter("AdrCat3Ky", orderHeader.AdrCat3Ky);
+                    dbCommand.CreateAndAddParameter("FrmOrdKy", orderHeader.FromOrderKey);
 
                     response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
@@ -214,12 +216,13 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@PrjKy", item.ProjectKey);
                     dbCommand.CreateAndAddParameter("@Anl2Ky", (int)item.AnalysisType2.CodeKey);
 					dbCommand.CreateAndAddParameter("@Anl4Ky", (int)item.AnalysisType4.CodeKey);
+                    dbCommand.CreateAndAddParameter("@FrmOrdDetKy", item.FromOrderDetailKey);
 
-					//  dbCommand.CreateAndAddParameter("ItmPrpKy", item.ItemProperty1);
+                    //  dbCommand.CreateAndAddParameter("ItmPrpKy", item.ItemProperty1);
 
-					// dbCommand.CreateAndAddParameter("IsSetOff",item.)
+                    // dbCommand.CreateAndAddParameter("IsSetOff",item.)
 
-					response.ExecutionStarted = DateTime.UtcNow;
+                    response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
                     reader = dbCommand.ExecuteReader();
                     while (reader.Read())
@@ -451,7 +454,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("Adr2Ky", orderV3.Insurance.AccountKey);
 					dbCommand.CreateAndAddParameter("@AccKy", orderV3.AccountKey);
 
-					response.ExecutionStarted = DateTime.UtcNow;
+                    response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
                     reader = dbCommand.ExecuteReader();
                     while (reader.Read())
@@ -552,14 +555,14 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@ObjKy", ObjKy);
                     dbCommand.CreateAndAddParameter("@isTransfer", item.IsTransfer);
                     dbCommand.CreateAndAddParameter("@isConfirmed", item.IsConfirmed);
-                    dbCommand.CreateAndAddParameter("@FrmOrdDetKy", item.FromOrderDetailKey);
+                    dbCommand.CreateAndAddParameter("@FrmOrdDetKy", item.FromOrderDetailKey);//changed this FromOrderDetailKey to FrmOrdDetKy
                     dbCommand.CreateAndAddParameter("@TrnPri", item.TransactionPrice);
                     dbCommand.CreateAndAddParameter("@OrgQty", item.OriginalQuantity);
                     dbCommand.CreateAndAddParameter("@PrjKy", item.ProjectKey);
 					dbCommand.CreateAndAddParameter("@Anl2Ky", (int)item.AnalysisType2.CodeKey);
 					dbCommand.CreateAndAddParameter("@Anl4Ky", (int)item.AnalysisType4.CodeKey);
 
-					response.ExecutionStarted = DateTime.UtcNow;
+                    response.ExecutionStarted = DateTime.UtcNow;
                     dbCommand.Connection.Open();
                     reader = dbCommand.ExecuteReader();
                     while (reader.Read())
@@ -1781,6 +1784,8 @@ namespace BlueLotus360.Data.SQL92.Repository
                     {
                         information.APIIntegrationKey = reader.GetColumn<int>("ApiIntgrKy");
                         information.EndPointURL = reader.GetColumn<string>("EndPointUrl");
+                        information.EndPointToken = reader.GetColumn<string>("EndPointToken");
+                        information.TokenValidTillTime = reader.GetColumn<DateTime>("TokenValidTm");
                     }
                     response.ExecutionEnded = DateTime.UtcNow;
                     response.Value = information;
@@ -3171,6 +3176,65 @@ namespace BlueLotus360.Data.SQL92.Repository
                 }
 
 
+            }
+        }
+
+        public int GetPickMeOrderByOrderID(Company company, RequestParameters partnerOrder)
+        {
+            int OrdKy = 0;
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                IDataReader reader = null;
+                string SPName = "GetPickMeOrderByOrderID";
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("CKy", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("OurAccCd", partnerOrder.PlatformName);
+                    dbCommand.CreateAndAddParameter("OrdID", partnerOrder.OrderID);
+                    dbCommand.Connection.Open();
+                    reader = dbCommand.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        OrdKy = reader.GetColumn<int>("OrdKy");
+                    }
+
+                    if (!reader.IsClosed)
+                    {
+                        reader.Close();
+                    }
+
+
+
+
+                }
+                catch (Exception exp)
+                {
+
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+                    if (reader != null)
+                    {
+                        if (!reader.IsClosed)
+                        {
+                            reader.Close();
+                        }
+                    }
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    reader.Dispose();
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+
+                }
+
+                return OrdKy;
             }
         }
     }

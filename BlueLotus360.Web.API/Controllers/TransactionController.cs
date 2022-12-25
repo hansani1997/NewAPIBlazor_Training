@@ -1,4 +1,5 @@
 ﻿using BlueLotus360.Core.Domain.DTOs;
+using BlueLotus360.Core.Domain.DTOs.RequestDTO;
 using BlueLotus360.Core.Domain.Entity.Base;
 using BlueLotus360.Core.Domain.Entity.Transaction;
 using BlueLotus360.Core.Domain.Responses;
@@ -133,6 +134,26 @@ namespace BlueLotus360.Web.API.Controllers
 
             TransactionPermission per = _transactionService.GetPermissionForOrderTrn((int)request.ApproveState.CodeKey, (int)request.ElementKey, (int)request.TransactionType.CodeKey,(int)request.TransactionKey, company, user);
             return Ok(per);
+        }
+
+        [HttpPost("GetTransactionTotalPayed")]
+        public IActionResult GetTransactionTotalPayed(RecieptDetailRequest request)
+        {
+            var user = Request.GetAuthenticatedUser();
+            var company = Request.GetAssignedCompany();
+
+            RecviedAmountResponse response = _transactionService.GetRecviedAmountResponse(company, user, request);
+            return Ok(response);
+        }
+
+        [HttpPost("SaveAccountRecieptEx")]
+        public IActionResult SaveAccountRecieptEx(PayementModeReciept request)
+        {
+            var user = Request.GetAuthenticatedUser();
+            var company = Request.GetAssignedCompany();
+
+            _transactionService.SaveAccountResponseEx(company, user, request);
+            return Ok();
         }
     }
 }

@@ -59,7 +59,9 @@ namespace BlueLotus360.Core.Domain.Entity.WorkOrder
         public IList<GenericOrderItem> WorkOrderServices { get; set; }
         public IList<WorkOrder> JobHistory { get; set; }
         public BLTransaction WorkOrderTransaction { get; set; }
-		public WorkOrder()
+        public int MaterialRequsitionKey { get; set; } = 1;
+        public string? MaterialRequsitionNo { get; set; } = "";
+        public WorkOrder()
         {
             SelectedVehicle = new Vehicle();
             Department = new CodeBaseResponse();
@@ -144,6 +146,14 @@ namespace BlueLotus360.Core.Domain.Entity.WorkOrder
             EstimatedServices = new List<GenericOrderItem>();
         }
 
+    }
+
+    public class CarOrdToOrdPostingRequest
+    {
+        public int FromOrderKey { get; set; } = 1;
+        public int ToOrderKey { get; set; } = 1;
+        public CodeBaseResponse ToOrderType { get; set; } = new CodeBaseResponse();
+        public long ElementKey { get; set; } = 1;
     }
 
     public class IRNResponse

@@ -1,4 +1,5 @@
-﻿using BlueLotus360.Core.Domain.Entity.Base;
+﻿using BlueLotus360.Core.Domain.DTOs.RequestDTO;
+using BlueLotus360.Core.Domain.Entity.Base;
 using BlueLotus360.Data.SQL92.Definition;
 using BlueLotus360.Data.SQL92.Extenstions;
 using System;
@@ -83,7 +84,32 @@ namespace BlueLotus360.Data.SQL92.Repository
                 throw exp;
             }
         }
-        
+
+        protected DataTable GetPayementModeRecieptTable(IList<PaymentModeWiseAmount> reciepts)
+        {
+            string[] feildList = { "PmtModeKy","Amt","PmtDocNo",
+                                    "PmtDocDt" };
+
+
+            DataTable Dt = GetDataTable(feildList);
+
+
+            foreach (var item in reciepts)
+            {
+                DataRow dataRow = Dt.NewRow();
+                dataRow["PmtModeKy"] = item.PaymentMode.CodeKey;
+                dataRow["Amt"] = item.Amount;
+                dataRow["PmtDocNo"] = item.PayementDocumentNumber;
+                dataRow["PmtDocDt"] = item.PayementDocumentDate;
+                Dt.Rows.Add(dataRow);
+
+            }
+
+            return Dt;
+
+
+        }
+
         protected  ISQLDataLayer _dataLayer { get; private set; }
         public BaseRepository(ISQLDataLayer dataLayer)
         {
