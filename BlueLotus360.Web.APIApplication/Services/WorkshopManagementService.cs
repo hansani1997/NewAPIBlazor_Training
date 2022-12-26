@@ -111,7 +111,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.OrderDate = OH.OrderDate;
                     lineItem.ObjectKey = orderDetails.FormObjectKey;
                     lineItem.OrderLineLocation = new CodeBaseResponse();
-                    lineItem.OrderLineLocation.CodeKey = item.OrderLineLocation.CodeKey;
+                    lineItem.OrderLineLocation.CodeKey = orderDetails.OrderLocation.CodeKey;
                     lineItem.CompanyKey = company.CompanyKey;
                     lineItem.UserKey = user.UserKey;
                     lineItem.DiscountPercentage = item.DiscountPercentage;
@@ -414,7 +414,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.IsActive = item.IsActive;
                     lineItem.IsApproved = item.IsApproved;
                     lineItem.OrderLineLocation = new CodeBaseResponse();
-                    lineItem.OrderLineLocation.CodeKey = item.OrderLineLocation.CodeKey;
+                    lineItem.OrderLineLocation.CodeKey = orderDetails.OrderLocation.CodeKey;
                     lineItem.BussinessUnitKey = (int)item.BussinessUnit.CodeKey;
                     lineItem.AccountKey = OH.AccountKey;
                     lineItem.LineNumber = item.LineNumber;
