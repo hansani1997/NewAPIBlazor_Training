@@ -18,7 +18,9 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using System;
 using System.Drawing;
+using System.Net;
 using System.Reflection.Emit;
 using System.Text.Json;
 using System.Transactions;
@@ -530,10 +532,37 @@ namespace BlueLotus360.Web.API.Controllers
                     }
                     if (company.CompanyKey == 541 && item.imageArr == null)
                     {
-                        if (System.IO.File.Exists("https://bluelotus360.co/3pl/nst/" + item.ItemCode + ".jpg"))
-                        {
-                            item.ItemImageUrl = "https://bluelotus360.co/3pl/nst/" + item.ItemCode + ".jpg";
-                        }
+                        item.ItemImageUrl = "https://bluelotus360.co/3pl/nst/" + item.ItemCode + ".jpg";
+                        //HttpWebResponse response = null;
+                        //var webrequest = (HttpWebRequest)WebRequest.Create(path);
+                        //webrequest.Method = "HEAD";
+                        //try
+                        //{
+                        //    response = (HttpWebResponse)webrequest.GetResponse();
+                        //    if(response.StatusCode!= HttpStatusCode.NotFound)
+                        //    {
+                        //        item.ItemImageUrl = path;
+                        //    }
+                        //    else
+                        //    {
+                        //        item.ItemImageUrl = null;
+                        //    }
+                        //}
+                        //catch (WebException ex)
+                        //{
+                        //    /* A WebException will be thrown if the status of the response is not `200 OK` */
+                        //    item.ItemImageUrl = null;
+                        //}
+                        //finally
+                        //{
+                        //    // Don't forget to close your response.
+                        //    if (response != null)
+                        //    {
+                        //        response.Close();
+                        //    }
+                        //}
+                        
+                        
                     }
 
                 }
