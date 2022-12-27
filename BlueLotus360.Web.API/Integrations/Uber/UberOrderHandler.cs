@@ -107,7 +107,8 @@ namespace BlueLotus360.Web.API.Integrations.Uber
                 saveUberOrder.DeliveryBrand = uberOrder.Brand;
                 saveUberOrder.IsActive = 1;
                 saveUberOrder.IsApproved = 1;
-                saveUberOrder.DeliveryCharges = Convert.ToDecimal(uberOrder.Payment.Charges.Delivery_fee.Amount/100);
+                saveUberOrder.DeliveryCharges = 0;
+                    //Convert.ToDecimal(uberOrder.Payment.Charges.Delivery_fee.Amount/100);
                 saveUberOrder.Platforms.AccountCode = "Uber";
                 saveUberOrder.PaymentKey = Convert.ToInt32(_CodebaseService.GetCodeByOurCodeAndConditionCode(company, new User(), "UberWallet", "PmtTrm").Value.CodeKey);                                                                                                                                                                               //setting up order status
                 saveUberOrder.OrderStatus.CodeName = uberOrder.Current_state;
