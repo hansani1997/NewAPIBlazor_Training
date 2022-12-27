@@ -12,6 +12,6 @@ namespace BlueLotus360.Core.Domain.Definitions.Repository
     {
         CodeBaseResponse GetDocumentTypeByContentType(Company company, User user, string contentType);
         void SaveUploadFileForTransaction(Company company, User user, BinaryDocument binaryDocument);
-        IList<Base64Document> GetBase64Documents(DocumentRetrivaltDTO documentRetrivaltDTO);
+        IList<Base64Document> GetBase64Documents(Company company, User user, DocumentRetrivaltDTO documentRetrivaltDTO);
     }
 }

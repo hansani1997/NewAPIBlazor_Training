@@ -90,10 +90,10 @@ namespace BlueLotus360.Data.SQL92.Repository
                     dbCommand.CreateAndAddParameter("@CKy", binaryDocument.CompanyKey);
                     dbCommand.CreateAndAddParameter("@UsrKy", user.UserKey);
                     dbCommand.CreateAndAddParameter("@TrnKy", binaryDocument.TransactionKey);
-                    dbCommand.CreateAndAddParameter("@DocTypKy", binaryDocument.DocumentType.CodeKey);
-                    dbCommand.CreateAndAddParameter("@Des", binaryDocument.Description);
+                    dbCommand.CreateAndAddParameter("@DocTypKy",BaseComboResponse.GetKeyValue(binaryDocument.DocumentType));
+                    dbCommand.CreateAndAddParameter("@Des", binaryDocument.Description??"");
                     dbCommand.CreateAndAddParameter("@Keywords", binaryDocument.Keyword);
-                    dbCommand.CreateAndAddParameter("@FileNm", binaryDocument.Filename);
+                    dbCommand.CreateAndAddParameter("@FileNm", binaryDocument.Filename??"");
                     dbCommand.CreateAndAddParameter("@FileContent", binaryDocument.DocumentArray);
                     dbCommand.CreateAndAddParameter("@AdrKy", binaryDocument.AddressKey);
                     dbCommand.CreateAndAddParameter("@ItmKy", binaryDocument.ItemKey);
@@ -147,7 +147,7 @@ namespace BlueLotus360.Data.SQL92.Repository
 
         }
 
-        public IList<Base64Document> GetBase64Documents(DocumentRetrivaltDTO documentRetrivaltDTO)
+        public IList<Base64Document> GetBase64Documents(Company company, User user, DocumentRetrivaltDTO documentRetrivaltDTO)
         {
             using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
             {
@@ -160,8 +160,8 @@ namespace BlueLotus360.Data.SQL92.Repository
 
                     dbCommand.CommandType = CommandType.StoredProcedure;
                     dbCommand.CommandText = SPName;
-                    dbCommand.CreateAndAddParameter("@Cky", documentRetrivaltDTO.CompanyKey);
-                    dbCommand.CreateAndAddParameter("@UsrKy", documentRetrivaltDTO.UserKey);
+                    dbCommand.CreateAndAddParameter("@Cky", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("@UsrKy", user.UserKey);
                     dbCommand.CreateAndAddParameter("@TrnKy", documentRetrivaltDTO.TransactionKey);
                     dbCommand.CreateAndAddParameter("@ItmKy", documentRetrivaltDTO.ItemKey);
                     dbCommand.CreateAndAddParameter("@OrdKy", documentRetrivaltDTO.OrderKey);
