@@ -2523,6 +2523,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         item.CategoryName = dataReader.GetColumn<string>("CdNm");
                         item.CategoryCode = dataReader.GetColumn<string>("Code");
                         item.imageArr = dataReader.GetColumn<byte[]>("Image");
+                        item.IsDiscontinued = dataReader.GetColumn<bool>("isDiscontinue");
 
                         code.Add(item);
                     }
@@ -3235,6 +3236,53 @@ namespace BlueLotus360.Data.SQL92.Repository
                 }
 
                 return OrdKy;
+            }
+        }
+
+        public bool UberMenu_DiscontinueWeb(UberDiscontinueItem request, Company company)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                bool isSuccess = false;
+                APIInformation information = new APIInformation();
+                string SPName = "UberMenu_DiscontinueWeb";
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("ItmCd", request.ItmCd);
+                    dbCommand.CreateAndAddParameter("CKy", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("isAct", request.isDiscontinue);
+
+                    dbCommand.Connection.Open();
+                    dbCommand.ExecuteNonQuery();
+
+                    isSuccess = true;
+
+
+
+
+
+                }
+                catch (Exception exp)
+                {
+                    isSuccess = false;
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+
+                }
+
+                return isSuccess;
             }
         }
     }
