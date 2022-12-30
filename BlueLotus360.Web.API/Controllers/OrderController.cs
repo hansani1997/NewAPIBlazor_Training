@@ -801,5 +801,14 @@ namespace BlueLotus360.Web.API.Controllers
             return Ok(OrdKy);
         }
 
+        [HttpPost("UberMenu_DiscontinueWeb")]
+        public IActionResult UberMenu_DiscontinueWeb(UberDiscontinueItem request)
+        {
+            var company = Request.GetAssignedCompany();
+            bool success = _orderService.UberMenu_DiscontinueWeb(request,company);
+
+            return Ok(success);
+        }
+
     }
 }
