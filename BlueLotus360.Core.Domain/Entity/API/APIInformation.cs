@@ -9,14 +9,22 @@ using System.Threading.Tasks;
 
 namespace BlueLotus360.Core.Domain.Entity.API
 {
-    public class APIInformation:BaseEntity
+
+    public enum RequestLogMode
+    {
+        None = 0,
+        DataBase = 1,
+        FileSystem = 2,
+        Cache = 4
+    }
+    public class APIInformation : BaseEntity
     {
         public APIInformation()
         {
             Location = new CodeBaseResponse();
-            BU= new CodeBaseResponse();
+            BU = new CodeBaseResponse();
         }
-        public int APIIntegrationKey { get; set; } =1;
+        public int APIIntegrationKey { get; set; } = 1;
         public string? APIIntegrationNmae { get; set; }
         public string? Description { get; set; }
         public string? ApplicationID { get; set; }
@@ -24,7 +32,7 @@ namespace BlueLotus360.Core.Domain.Entity.API
         public string? RestrictToIP { get; set; }
         public int MappedCompanyKey { get; set; } = 1;
         public int MappedUserKey { get; set; } = 1;
-        public bool IsLocalOnly { get; set; } 
+        public bool IsLocalOnly { get; set; }
         public bool ISIPFilterd { get; set; }
         public bool ValidateTokenOnly { get; set; }
         public string? Scheme { get; set; }
@@ -32,9 +40,10 @@ namespace BlueLotus360.Core.Domain.Entity.API
         public int MappedLocation { get; set; }
         public string? BaseURL { get; set; }
         public bool IsNonAutoMapped { get; set; }
-        public string? AuthenticationType  { get; set; }
+        public string? AuthenticationType { get; set; }
         public string? IntegrationId { get; set; }
 
+        public RequestLogMode LogType { get; set; }
         public string? SecretInstanceKey { get; set; }
         public int MappedLocationKey { get; set; } = 1;
         public string? MappedLocationName { get; set; }
@@ -68,24 +77,41 @@ namespace BlueLotus360.Core.Domain.Entity.API
         public DateTime TokenValidTillTime { get; set; }
 
 
-      
 
-        
+
+
     }
 
 
     public class TokebGeneratioResponse
     {
-        public TokebGeneratioResponse() { 
-        ResponseErrors=new Dictionary<string,object>();
+        public TokebGeneratioResponse()
+        {
+            ResponseErrors = new Dictionary<string, object>();
         }
 
-       public  IDictionary<string, object> ResponseErrors { get; set; }
+        public IDictionary<string, object> ResponseErrors { get; set; }
 
         public string Value { get; set; }
 
     }
 
 
-     
+    public class APIRequestLogDetail
+    {
+        public string ApplicationId { get; set; } = "";
+
+        public string Controller { get; set; } = "";
+
+        public string Action { get; set; } = "";
+
+        public string IPAddress { get; set; } = "";
+
+        public string RequestBody { get; set; }
+
+        public long APIRequestLogDetailKey { get; set; } = 1;
+    }
+
+
+
 }
