@@ -654,7 +654,22 @@ namespace BlueLotus360.Web.API.Controllers
                     //1 & 2
                     if (model.Event_type == "orders.notification")
                     {
-                        orderHandler.GetUberDetailsByOrderID(model.Meta.Resource_id, model.Meta.User_id);
+                       PartnerOrder order=orderHandler.GetUberDetailsByOrderID(model.Meta.Resource_id, model.Meta.User_id);
+                        Company company = new Company();
+                        company.CompanyKey = StoreInfo.MappedCompanyKey;
+                        long ConfirmKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, new Core.Domain.Entity.Base.User(), "Confirm", "OrdSts").Value.CodeKey;
+                        if (company.CompanyKey == 541 && order.OrderStatus.CodeKey == ConfirmKy)
+                        {
+                            StockInjection stockInjection = new StockInjection()
+                            {
+                                OrderKey = Convert.ToInt32(order.PartnerOrderId),
+                                IntegrationId = "4824fc92-10fa-4eca-a7d0-e7048892bc84",
+                                RequestId = "JKLL_TST"
+                            };
+                            StockUpdateAfterConfirmation(stockInjection);
+                        }
+                        
+
                     }
 
                     //1 & 3
@@ -676,6 +691,7 @@ namespace BlueLotus360.Web.API.Controllers
                             OrderKey = Convert.ToInt32(partnerorder.PartnerOrderId)
                         };
                         _orderService.OrderHubStatus_UpdateWeb(updateeq, new Core.Domain.Entity.Base.User());
+                        long CancelKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, new Core.Domain.Entity.Base.User(), "Cancel", "OrdSts").Value.CodeKey;
 
                     }
 
