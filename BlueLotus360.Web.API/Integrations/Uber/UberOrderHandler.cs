@@ -22,8 +22,9 @@ namespace BlueLotus360.Web.API.Integrations.Uber
             _CodebaseService = codeBaseService;
             _addressService = addressService;
         }
-        public void GetUberDetailsByOrderID(string OrderID,string MerchantID)
+        public PartnerOrder GetUberDetailsByOrderID(string OrderID,string MerchantID)
         {
+            PartnerOrder order = new PartnerOrder();
             APIRequestParameters ApiParams = new APIRequestParameters()
             {
                 EndPointName = UberTokenEndpoints.Eats_Order_Read_Scope.GetDescription()
@@ -75,15 +76,16 @@ namespace BlueLotus360.Web.API.Integrations.Uber
                         };
                         _orderService.APIResponseDet_InsertWeb(res);
                     }
-                    SaveUberOrder(UberOrder, MerchantID);
+                    order=  SaveUberOrder(UberOrder, MerchantID);
                 }
             }
 
-
+            return order;
         }
 
-        public void SaveUberOrder(UberOrder uberOrder, string merchantId)
+        public PartnerOrder SaveUberOrder(UberOrder uberOrder, string merchantId)
         {
+            PartnerOrder partnerOrder = new PartnerOrder();
             int LiNo = 0;
             try
             {
@@ -107,7 +109,8 @@ namespace BlueLotus360.Web.API.Integrations.Uber
                 saveUberOrder.DeliveryBrand = uberOrder.Brand;
                 saveUberOrder.IsActive = 1;
                 saveUberOrder.IsApproved = 1;
-                saveUberOrder.DeliveryCharges = Convert.ToDecimal(uberOrder.Payment.Charges.Delivery_fee.Amount/100);
+                saveUberOrder.DeliveryCharges = 0;
+                    //Convert.ToDecimal(uberOrder.Payment.Charges.Delivery_fee.Amount/100);
                 saveUberOrder.Platforms.AccountCode = "Uber";
                 saveUberOrder.PaymentKey = Convert.ToInt32(_CodebaseService.GetCodeByOurCodeAndConditionCode(company, new User(), "UberWallet", "PmtTrm").Value.CodeKey);                                                                                                                                                                               //setting up order status
                 saveUberOrder.OrderStatus.CodeName = uberOrder.Current_state;
@@ -176,13 +179,14 @@ namespace BlueLotus360.Web.API.Integrations.Uber
                     }
                 }
 
-                _orderService.GetOrdersFromOrderPlatforms(company, new User(), saveUberOrder);
+                partnerOrder= _orderService.GetOrdersFromOrderPlatforms(company, new User(), saveUberOrder).Value;
+                partnerOrder.OrderStatus.CodeKey = saveUberOrder.OrderStatus.CodeKey;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
-
+            return partnerOrder;
         }
     }
 }

@@ -48,7 +48,7 @@ namespace BlueLotus360.Web.APIApplication.Services
 
         public IList<Base64Document> GetBase64Documents(Company company, User user, DocumentRetrivaltDTO document)
         {
-            return _unitOfWork.DocumentRepository.GetBase64Documents(document);
+            return _unitOfWork.DocumentRepository.GetBase64Documents(company,user,document);
         }
     }
 }
