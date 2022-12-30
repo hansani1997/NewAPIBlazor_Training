@@ -10,6 +10,8 @@ namespace BlueLotus360.Web.APIApplication.Definitions.ServiceDefinitions
     public interface IAPIService
     {
         APIInformation GetAPIInformationByAppId(string appId);
-        
+        void SaveRequestLog(APIRequestLogDetail detail);
+
+      
     }
 }

@@ -3,7 +3,10 @@ using BlueLotus360.Core.Domain.Entity.Base;
 using BlueLotus360.Data.SQL92.UnitOfWork;
 using BlueLotus360.Web.APIApplication.Definitions.ServiceDefinitions;
 using BlueLotus360.Web.APIApplication.Services;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace BlueLotus360.Web.API.Extension
 {
@@ -86,6 +89,32 @@ namespace BlueLotus360.Web.API.Extension
             Services.AddScoped<IDocumentService,DocumentService>();
             Services.AddScoped<IProjectService, ProjectService>();
             Services.AddScoped<IBookingModuleService, BookingModuleService>();
+        }
+
+
+
+        public static async Task<string> GetRequestBodyAsStringAsync(this HttpRequest request)
+        {
+         
+
+            // IMPORTANT: Ensure the requestBody can be read multiple times.
+            HttpRequestRewindExtensions.EnableBuffering(request);
+
+            // IMPORTANT: Leave the body open so the next middleware can read it.
+            using (StreamReader reader = new StreamReader(
+                request.Body,
+                Encoding.UTF8,
+                detectEncodingFromByteOrderMarks: false,
+                leaveOpen: true))
+            {
+                string strRequestBody = await reader.ReadToEndAsync();
+                
+                // IMPORTANT: Reset the request body stream position so the next middleware can read it
+                request.Body.Position = 0;
+                return strRequestBody;
+            }
+
+            return "No Content->";
         }
     }
 }
