@@ -24,63 +24,73 @@ namespace BlueLotus360.Web.API.Integrations.Uber
         }
         public PartnerOrder GetUberDetailsByOrderID(string OrderID,string MerchantID)
         {
-            PartnerOrder order = new PartnerOrder();
-            APIRequestParameters ApiParams = new APIRequestParameters()
+            try
             {
-                EndPointName = UberTokenEndpoints.Eats_Order_Read_Scope.GetDescription()
+                PartnerOrder order = new PartnerOrder();
+                APIRequestParameters ApiParams = new APIRequestParameters()
+                {
+                    EndPointName = UberTokenEndpoints.Eats_Order_Read_Scope.GetDescription()
 
-            };
-            UberProvisionHandler uberProvisionHandler = new UberProvisionHandler(_orderService);
-            UberTokenHandler uberTokenHandler = new UberTokenHandler(_orderService);
-            APIInformation GetUberToken = new APIInformation();
-            APIInformation APIInfo = uberProvisionHandler.GetCommonUberDetails(new Core.Domain.Entity.Base.User());
-            if (APIInfo != null)
-            {
-                APIInformation ScopeendpointInfo = uberProvisionHandler.GetEndPoint(APIInfo.APIIntegrationKey, ApiParams.EndPointName);
-                GetUberToken = uberTokenHandler.GetUberEatsTokensByEndPointName(APIInfo, ScopeendpointInfo, ApiParams.EndPointName, "", "",1);
-                APIRequestParameters EndPointParams = new APIRequestParameters()
-                {
-                    EndPointName = UberEndpointURLS.GetOrder.ToString(),
-                    APIIntegrationKey= APIInfo.APIIntegrationKey,
-                    LocationKey=1,
-                    BUKy=1
                 };
-                APIInformation endpointInfo = _orderService.GetAPIEndPoints(new Company(), EndPointParams).Value;
-
-                var client = new RestClient(GetUberToken.BaseURL);
-                var request = new RestRequest(endpointInfo.EndPointURL.Replace(UberRequestIDs.order_id.GetDescription(), OrderID),Method.Get);
-                request.AddHeader("Authorization", "Bearer " + GetUberToken.EndPointToken);
-                request.AddHeader("Content-Type", "application/json");
-                RestResponse response = client.Execute(request);
-                var settings = new JsonSerializerSettings
+                UberProvisionHandler uberProvisionHandler = new UberProvisionHandler(_orderService);
+                UberTokenHandler uberTokenHandler = new UberTokenHandler(_orderService);
+                APIInformation GetUberToken = new APIInformation();
+                APIInformation APIInfo = uberProvisionHandler.GetCommonUberDetails(new Core.Domain.Entity.Base.User());
+                if (APIInfo != null)
                 {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    MissingMemberHandling = MissingMemberHandling.Ignore
-                };
-                if (response.IsSuccessful)
-                {
-                    UberOrder UberOrder = JsonConvert.DeserializeObject<UberOrder>(response.Content, settings);
-                    if(UberOrder != null && UberOrder.Cart.Items.Count > 0)
+                    APIInformation ScopeendpointInfo = uberProvisionHandler.GetEndPoint(APIInfo.APIIntegrationKey, ApiParams.EndPointName);
+                    GetUberToken = uberTokenHandler.GetUberEatsTokensByEndPointName(APIInfo, ScopeendpointInfo, ApiParams.EndPointName, "", "", 1);
+                    APIRequestParameters EndPointParams = new APIRequestParameters()
                     {
-                       
-                        ResponseDetails res = new ResponseDetails()
-                        {
-                            TriggerKey = 3,
-                            SubscriberKey = 3,
-                            ResponseCode = response.StatusDescription,
-                            Response = response.Content,
-                            ContenetPayload = endpointInfo.EndPointURL,
-                            Reference = "Uber Orders: "+ OrderID,
-                            TrnTyp = "PUOrd"
+                        EndPointName = UberEndpointURLS.GetOrder.ToString(),
+                        APIIntegrationKey = APIInfo.APIIntegrationKey,
+                        LocationKey = 1,
+                        BUKy = 1
+                    };
+                    APIInformation endpointInfo = _orderService.GetAPIEndPoints(new Company(), EndPointParams).Value;
 
-                        };
-                        _orderService.APIResponseDet_InsertWeb(res);
+                    var client = new RestClient(GetUberToken.BaseURL);
+                    var request = new RestRequest(endpointInfo.EndPointURL.Replace(UberRequestIDs.order_id.GetDescription(), OrderID), Method.Get);
+                    request.AddHeader("Authorization", "Bearer " + GetUberToken.EndPointToken);
+                    request.AddHeader("Content-Type", "application/json");
+                    RestResponse response = client.Execute(request);
+                    var settings = new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore
+                    };
+                    if (response.IsSuccessful)
+                    {
+                        UberOrder UberOrder = JsonConvert.DeserializeObject<UberOrder>(response.Content, settings);
+                        if (UberOrder != null && UberOrder.Cart.Items.Count > 0)
+                        {
+
+                            ResponseDetails res = new ResponseDetails()
+                            {
+                                TriggerKey = 3,
+                                SubscriberKey = 3,
+                                ResponseCode = response.StatusDescription,
+                                Response = response.Content,
+                                ContenetPayload = endpointInfo.EndPointURL,
+                                Reference = "Uber Orders: " + OrderID,
+                                TrnTyp = "PUOrd"
+
+                            };
+                            _orderService.APIResponseDet_InsertWeb(res);
+                        }
+                        order = SaveUberOrder(UberOrder, MerchantID);
                     }
-                    order=  SaveUberOrder(UberOrder, MerchantID);
                 }
+                return order;
             }
 
-            return order;
+            catch(Exception exception)
+            {
+                throw exception;
+            }
+           
+
+           
         }
 
         public PartnerOrder SaveUberOrder(UberOrder uberOrder, string merchantId)
