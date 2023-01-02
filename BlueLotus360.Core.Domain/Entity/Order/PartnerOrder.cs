@@ -222,4 +222,11 @@ namespace BlueLotus360.Core.Domain.Entity
         public string? TrnTyp { get; set; }
         public string? ContenetPayload { get; set; }
     }
+
+    public class UberDiscontinueItem
+    {
+        public string ItmCd { get; set; }
+        public bool isDiscontinue { get; set; }
+
+    }
 }

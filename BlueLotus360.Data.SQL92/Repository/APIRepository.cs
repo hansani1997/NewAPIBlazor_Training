@@ -54,6 +54,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         information.Scheme = reader.GetColumn<string>("Scheme");
                         information.BaseURL = reader.GetColumn<string>("BaseURL");
                         information.AuthenticationType = reader.GetColumn<string>("Type");
+                        information.LogType = (RequestLogMode)(reader.GetColumn<int>("LogMode")) ;
                     }
                     response.ExecutionEnded = DateTime.UtcNow;
                     response.Value = information;
@@ -88,6 +89,59 @@ namespace BlueLotus360.Data.SQL92.Repository
                 }
 
                 return response;
+
+            }
+        }
+
+
+
+        public BaseServerResponse<object> SaveRequestLog(APIRequestLogDetail logDetail)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+
+                BaseServerResponse<object> serverResponse = new BaseServerResponse<object>(); ;
+                try
+                {
+                    long logDetailKey = 1;
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = "APIRequestLogDet_InsertWeb";
+                    dbCommand.CreateAndAddParameter("@ApplicationID", logDetail.ApplicationId);
+                    dbCommand.CreateAndAddParameter("@Controller", logDetail.Controller);
+                    dbCommand.CreateAndAddParameter("@Action", logDetail.Action);
+                    dbCommand.CreateAndAddParameter("@RequestBody", logDetail.RequestBody);
+                    dbCommand.CreateAndAddParameter("@IPAddress", logDetail.IPAddress);
+                    IDbDataParameter outParam = dbCommand.CreateAndAddParameter("@APIRequestLogDetKy", "1");
+                    outParam.Direction = ParameterDirection.Output;
+                    outParam.DbType = DbType.Int64;
+                    dbCommand.Connection.Open();
+                    dbCommand.ExecuteNonQuery();
+                    logDetail.APIRequestLogDetailKey = Convert.ToInt64(outParam.Value);
+
+                    serverResponse.Value = logDetailKey;
+                 
+
+
+
+                }
+                catch (Exception exp)
+                {
+                    
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+
+                }
+
+                return serverResponse;
 
             }
         }

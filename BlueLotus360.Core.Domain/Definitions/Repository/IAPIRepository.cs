@@ -12,5 +12,7 @@ namespace BlueLotus360.Core.Domain.Definitions.Repository
     {
         BaseServerResponse<APIInformation> GetAPIInformationByAppId(string appId);
 
+        BaseServerResponse<object> SaveRequestLog(APIRequestLogDetail detail);
+
     }
 }
