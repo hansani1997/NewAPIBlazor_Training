@@ -87,8 +87,16 @@ namespace BlueLotus360.Web.API.Controllers
             var company = Request.GetAssignedCompany();
             var uiObject = _objectService.GetObjectByObjectKey(insurenceOrder.FormObjectKey);
 
-            var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
-            insurenceOrder.OrderType = ordTyp.Value;
+            if (insurenceOrder.IsIRNEstimateOrder) 
+            {
+                var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "IrnEst", "OrdTyp");
+                insurenceOrder.OrderType = ordTyp.Value;
+            }
+            else
+            {
+                var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
+                insurenceOrder.OrderType = ordTyp.Value;
+            }
 
             var ordsts = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, insurenceOrder.OrderStatus.OurCode, "PrcsFlow");
             insurenceOrder.OrderStatus = ordsts.Value;
@@ -127,8 +135,16 @@ namespace BlueLotus360.Web.API.Controllers
             var company = Request.GetAssignedCompany();
             var uiObject = _objectService.GetObjectByObjectKey(insurenceOrder.FormObjectKey);
 
-            var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
-            insurenceOrder.OrderType = ordTyp.Value;
+            if (insurenceOrder.IsIRNEstimateOrder)
+            {
+                var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "IrnEst", "OrdTyp");
+                insurenceOrder.OrderType = ordTyp.Value;
+            }
+            else
+            {
+                var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
+                insurenceOrder.OrderType = ordTyp.Value;
+            }
 
             var ordsts = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, insurenceOrder.OrderStatus.OurCode, "PrcsFlow");
             insurenceOrder.OrderStatus = ordsts.Value;

@@ -44,6 +44,7 @@ namespace BlueLotus360.Core.Domain.DTOs
         public User EnteredUser { get; set; }
         public AccountResponse Insurance { get; set; }
         public CodeBaseResponse AddressCategory3 { get; set; }
+        public bool IsIRNEstimateOrder { get; set; }
 
         public GenericOrder()
         {
