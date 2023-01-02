@@ -128,6 +128,7 @@ namespace BlueLotus360.Core.Domain.Entity.Transaction
         public int IsMaterialItem { get; set; }
         public int IsServiceItem { get; set; }
         public decimal SubTotal { get; set; }
+        public int TransactionDetailsAccountKey { get; set; } = 1;
 
         public GenericTransactionLineItem()
         {

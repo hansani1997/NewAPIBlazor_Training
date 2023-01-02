@@ -116,7 +116,7 @@ namespace BlueLotus360.Core.Domain.DTOs
         public decimal AvlStk { get; set; } = 0;
         public string? Description { get; set; } = "";
         public string Remark { get; set; } = "";
-        public int OrderDetailsAccountKey { get; set; }
+        public int OrderDetailsAccountKey { get; set; } = 1;
         public AccountResponse BaringPrinciple { get; set; }
         public decimal PrinciplePrecentage { get; set; }
         public decimal PrincipleAmount { get; set; }
@@ -381,7 +381,10 @@ namespace BlueLotus360.Core.Domain.DTOs
         public CodeBaseResponse AnalysisType2 = new CodeBaseResponse();
         public CodeBaseResponse AnalysisType3 = new CodeBaseResponse();
 		public CodeBaseResponse AnalysisType4 = new CodeBaseResponse();
-	}
+
+        public int OrderDetailsAccountKey { get; set; } = 1;
+
+    }
 
     public class OrderFindDto
     {

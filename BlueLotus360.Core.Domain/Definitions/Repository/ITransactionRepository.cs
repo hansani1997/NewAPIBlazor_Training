@@ -1,6 +1,7 @@
 ﻿using BlueLotus360.Core.Domain.DTOs.RequestDTO;
 using BlueLotus360.Core.Domain.Entity.Base;
 using BlueLotus360.Core.Domain.Entity.Transaction;
+using BlueLotus360.Core.Domain.Entity.WorkOrder;
 using BlueLotus360.Core.Domain.Responses;
 using System;
 using System.Collections.Generic;
@@ -31,5 +32,7 @@ namespace BlueLotus360.Core.Domain.Definitions.Repository
         CodeBaseResponse TrnrApproveStatusFindByTrnKy(Company company, User user, int objky = 1, int trnky = 1);
         BaseServerResponse<IList<GenericTransactionLineItem>> GenericallyGetTransactionLineItemsV2(Company company, User user, TransactionOpenRequest request);
         RecviedAmountResponse GetRecviedAmountResponse(Company company, User user, RecieptDetailRequest request);
+        BaseServerResponse<WorkOrderAmountByAccount> TrnDetailAccountInsertUpdate(Company company, User user, WorkOrderAmountByAccount accDet);
+        BaseServerResponse<IList<WorkOrderAmountByAccount>> TransactionDetailAccountSelect(Company company, User user, WorkOrderAmountByAccount accDet);
     }
 }

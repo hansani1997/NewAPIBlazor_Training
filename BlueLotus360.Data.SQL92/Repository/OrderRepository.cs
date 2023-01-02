@@ -1257,6 +1257,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         oorderV3.OrderPrefix = new CodeBaseResponse() { CodeName = reader.GetColumn<string>("Prefix") ?? "" };
                         oorderV3.OrderCategory1 = this.GetCdMasByCdKy(reader.GetColumn<int>("OrdCat1Ky"));
                         oorderV3.OrderCategory2 = this.GetCdMasByCdKy(reader.GetColumn<int>("OrdCat2Ky"));
+                        oorderV3.OrderCategory3 = this.GetCdMasByCdKy(reader.GetColumn<int>("OrdCat3Ky"));
                         oorderV3.ProjectKey = reader.GetColumn<int>("PrjKy");
                         oorderV3.MeterReading = reader.GetColumn<decimal>("MeterReading");
                         oorderV3.DeliveryDate= reader.GetColumn<DateTime>("DlryDt");
