@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BlueLotus360.Core.Domain.Entity.UberEats
@@ -189,7 +190,8 @@ namespace BlueLotus360.Core.Domain.Entity.UberEats
     {
         public Charges Charges { get; set; }
         public Accounting Accounting { get; set; }
-        public List<Promotion> Promotions { get; set; }
+   
+      
     }
 
     public class Charges

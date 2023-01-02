@@ -1257,6 +1257,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         oorderV3.OrderPrefix = new CodeBaseResponse() { CodeName = reader.GetColumn<string>("Prefix") ?? "" };
                         oorderV3.OrderCategory1 = this.GetCdMasByCdKy(reader.GetColumn<int>("OrdCat1Ky"));
                         oorderV3.OrderCategory2 = this.GetCdMasByCdKy(reader.GetColumn<int>("OrdCat2Ky"));
+                        oorderV3.OrderCategory3 = this.GetCdMasByCdKy(reader.GetColumn<int>("OrdCat3Ky"));
                         oorderV3.ProjectKey = reader.GetColumn<int>("PrjKy");
                         oorderV3.MeterReading = reader.GetColumn<decimal>("MeterReading");
                         oorderV3.DeliveryDate= reader.GetColumn<DateTime>("DlryDt");
@@ -2523,6 +2524,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         item.CategoryName = dataReader.GetColumn<string>("CdNm");
                         item.CategoryCode = dataReader.GetColumn<string>("Code");
                         item.imageArr = dataReader.GetColumn<byte[]>("Image");
+                        item.IsDiscontinued = dataReader.GetColumn<bool>("isDiscontinue");
 
                         code.Add(item);
                     }
@@ -3235,6 +3237,53 @@ namespace BlueLotus360.Data.SQL92.Repository
                 }
 
                 return OrdKy;
+            }
+        }
+
+        public bool UberMenu_DiscontinueWeb(UberDiscontinueItem request, Company company)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                bool isSuccess = false;
+                APIInformation information = new APIInformation();
+                string SPName = "UberMenu_DiscontinueWeb";
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("ItmCd", request.ItmCd);
+                    dbCommand.CreateAndAddParameter("CKy", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("isAct", request.isDiscontinue);
+
+                    dbCommand.Connection.Open();
+                    dbCommand.ExecuteNonQuery();
+
+                    isSuccess = true;
+
+
+
+
+
+                }
+                catch (Exception exp)
+                {
+                    isSuccess = false;
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+
+                }
+
+                return isSuccess;
             }
         }
     }

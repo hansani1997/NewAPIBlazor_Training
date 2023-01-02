@@ -28,7 +28,7 @@ namespace BlueLotus360.Web.API.Integrations.Uber
             */
 
             TokebGeneratioResponse response= new TokebGeneratioResponse();
-            if ((aPIInformation.EndPointToken != "" || aPIInformation.EndPointToken != "1") && DateTime.Compare(DateTime.Today, aPIInformation.TokenValidTillTime) < 0)
+            if (aPIInformation.EndPointToken != "" && aPIInformation.EndPointToken != "1" && DateTime.Compare(DateTime.Today, aPIInformation.TokenValidTillTime) < 0)
             {
                 response.Value= aPIInformation.EndPointToken;
 

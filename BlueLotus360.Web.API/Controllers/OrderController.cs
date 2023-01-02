@@ -18,7 +18,9 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using System;
 using System.Drawing;
+using System.Net;
 using System.Reflection.Emit;
 using System.Text.Json;
 using System.Transactions;
@@ -530,10 +532,37 @@ namespace BlueLotus360.Web.API.Controllers
                     }
                     if (company.CompanyKey == 541 && item.imageArr == null)
                     {
-                        if (System.IO.File.Exists("https://bluelotus360.co/3pl/nst/" + item.ItemCode + ".jpg"))
-                        {
-                            item.ItemImageUrl = "https://bluelotus360.co/3pl/nst/" + item.ItemCode + ".jpg";
-                        }
+                        item.ItemImageUrl = "https://bluelotus360.co/3pl/nst/" + item.ItemCode + ".jpg";
+                        //HttpWebResponse response = null;
+                        //var webrequest = (HttpWebRequest)WebRequest.Create(path);
+                        //webrequest.Method = "HEAD";
+                        //try
+                        //{
+                        //    response = (HttpWebResponse)webrequest.GetResponse();
+                        //    if(response.StatusCode!= HttpStatusCode.NotFound)
+                        //    {
+                        //        item.ItemImageUrl = path;
+                        //    }
+                        //    else
+                        //    {
+                        //        item.ItemImageUrl = null;
+                        //    }
+                        //}
+                        //catch (WebException ex)
+                        //{
+                        //    /* A WebException will be thrown if the status of the response is not `200 OK` */
+                        //    item.ItemImageUrl = null;
+                        //}
+                        //finally
+                        //{
+                        //    // Don't forget to close your response.
+                        //    if (response != null)
+                        //    {
+                        //        response.Close();
+                        //    }
+                        //}
+                        
+                        
                     }
 
                 }
@@ -625,7 +654,22 @@ namespace BlueLotus360.Web.API.Controllers
                     //1 & 2
                     if (model.Event_type == "orders.notification")
                     {
-                        orderHandler.GetUberDetailsByOrderID(model.Meta.Resource_id, model.Meta.User_id);
+                       PartnerOrder order=orderHandler.GetUberDetailsByOrderID(model.Meta.Resource_id, model.Meta.User_id);
+                        Company company = new Company();
+                        company.CompanyKey = StoreInfo.MappedCompanyKey;
+                        long ConfirmKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, new Core.Domain.Entity.Base.User(), "Confirm", "OrdSts").Value.CodeKey;
+                        if (company.CompanyKey == 541 && order.OrderStatus.CodeKey == ConfirmKy)
+                        {
+                            StockInjection stockInjection = new StockInjection()
+                            {
+                                OrderKey = Convert.ToInt32(order.PartnerOrderId),
+                                IntegrationId = "4824fc92-10fa-4eca-a7d0-e7048892bc84",
+                                RequestId = "JKLL_TST"
+                            };
+                            StockUpdateAfterConfirmation(stockInjection);
+                        }
+                        
+
                     }
 
                     //1 & 3
@@ -647,6 +691,7 @@ namespace BlueLotus360.Web.API.Controllers
                             OrderKey = Convert.ToInt32(partnerorder.PartnerOrderId)
                         };
                         _orderService.OrderHubStatus_UpdateWeb(updateeq, new Core.Domain.Entity.Base.User());
+                        long CancelKy = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, new Core.Domain.Entity.Base.User(), "Cancel", "OrdSts").Value.CodeKey;
 
                     }
 
@@ -754,6 +799,15 @@ namespace BlueLotus360.Web.API.Controllers
             int OrdKy = _orderService.GetPickMeOrderByOrderID(company, request);
 
             return Ok(OrdKy);
+        }
+
+        [HttpPost("UberMenu_DiscontinueWeb")]
+        public IActionResult UberMenu_DiscontinueWeb(UberDiscontinueItem request)
+        {
+            var company = Request.GetAssignedCompany();
+            bool success = _orderService.UberMenu_DiscontinueWeb(request,company);
+
+            return Ok(success);
         }
 
     }

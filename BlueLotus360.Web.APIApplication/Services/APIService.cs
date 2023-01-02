@@ -22,5 +22,10 @@ namespace BlueLotus360.Web.APIApplication.Services
             var  apiInformation = _unitofWork.APIRepository.GetAPIInformationByAppId(appId);
             return apiInformation.Value;
         }
+
+        public void SaveRequestLog(APIRequestLogDetail logDetail)
+        {
+            _unitofWork.APIRepository.SaveRequestLog(logDetail);
+        }
     }
 }

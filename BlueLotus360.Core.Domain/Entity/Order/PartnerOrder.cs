@@ -138,7 +138,7 @@ namespace BlueLotus360.Core.Domain.Entity
         public decimal ItemQuantity { get; set; }
         public decimal TransactionPrice { get; set; }
         public decimal BaseTotalPrice { get; set; }
-        public decimal ItemDiscount { get; set; }
+        public decimal ItemDiscount { get; set; } = 0;
         public string SpecialInstructions { get; set; } = ""; //item comment
         public bool IsComposite { get; set; }
         public bool IsModifier { get; set; }
@@ -221,5 +221,12 @@ namespace BlueLotus360.Core.Domain.Entity
         public string? Reference { get; set; }
         public string? TrnTyp { get; set; }
         public string? ContenetPayload { get; set; }
+    }
+
+    public class UberDiscontinueItem
+    {
+        public string ItmCd { get; set; }
+        public bool isDiscontinue { get; set; }
+
     }
 }

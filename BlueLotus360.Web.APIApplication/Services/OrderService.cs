@@ -574,5 +574,10 @@ namespace BlueLotus360.Web.APIApplication.Services
         {
             return _unitOfWork.OrderRepository.GetPickMeOrderByOrderID(company, partnerOrder);
         }
+        public bool UberMenu_DiscontinueWeb(UberDiscontinueItem request, Company company)
+        {
+            return _unitOfWork.OrderRepository.UberMenu_DiscontinueWeb(request, company);
+        }
+       
     }
 }

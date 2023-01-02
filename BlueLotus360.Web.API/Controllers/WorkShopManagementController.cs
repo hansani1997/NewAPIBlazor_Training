@@ -182,8 +182,8 @@ namespace BlueLotus360.Web.API.Controllers
             var uiObject = _objectService.GetObjectByObjectKey(transaction.ElementKey);
             var trnTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Sale", "TrnTyp");
             transaction.TransactionType = trnTyp.Value;
-            //var trnControlCon = _codeBaseService.GetControlConditionCode(company, user, (int)transaction.ElementKey, "OrdDetAcc");
-            //transaction.TransactionControlCondition = trnControlCon.Value;
+            var trnControlCon = _codeBaseService.GetControlConditionCode(company, user, (int)transaction.ElementKey, "ItmTrnAcc");
+            transaction.TransactionControlCondition = trnControlCon.Value;
 
             var trn = _workshopManagementService.SaveWorkOrderTransaction(transaction, company, user, uiObject.Value);
             
