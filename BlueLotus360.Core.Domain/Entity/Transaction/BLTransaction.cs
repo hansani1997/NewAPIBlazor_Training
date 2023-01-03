@@ -99,6 +99,7 @@ namespace BlueLotus360.Core.Domain.Entity.Transaction
         public decimal Quantity1 { get; set; }
         public CodeBaseResponse TransactionControlCondition { get; set; }=new CodeBaseResponse();
 
+        public bool IsInsurance { get; set; }
         public BLTransaction()
         {
             Location = new CodeBaseResponse();
