@@ -940,7 +940,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     WorkOrderAmountByAccount principle_accdet = new WorkOrderAmountByAccount()
                     {
                         TransactionDetailsAccountKey = line.TransactionDetailsAccountKey,
-                        FromOrderDetailKey = (int)line.ItemTransactionKey,
+                        FromItemTransactionKey = (int)line.ItemTransactionKey,
                         ObjectKey = line.ElementKey,
                         Account = line.BaringPrinciple,
                         Address = new AddressResponse() { AddressKey = line.Address.AddressKey },
