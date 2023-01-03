@@ -122,6 +122,8 @@ namespace BlueLotus360.Core.Domain.Entity.Transaction
         public AccountResponse BaringCompany { get; set; } = new AccountResponse();
         public decimal CompanyPrecentage { get; set; }
         public decimal CompanyAmount { get; set; }
+        public AccountResponse BaringCustomer { get; set; }
+        public decimal CustomerPrecentage { get; set; }
         public decimal CustomerAmount { get; set; }
         public int IsSelected { get; set; }
         public decimal Time { get; set; }
@@ -137,7 +139,7 @@ namespace BlueLotus360.Core.Domain.Entity.Transaction
             SerialNumbers = new List<ItemSerialNumber>();
             BaringPrinciple = new AccountResponse();
             BaringCompany= new AccountResponse();   
-
+            BaringCustomer= new AccountResponse();  
         }
 
         public decimal GetLineDiscount()

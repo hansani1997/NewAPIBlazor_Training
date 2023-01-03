@@ -124,6 +124,8 @@ namespace BlueLotus360.Core.Domain.DTOs
         public AccountResponse BaringCompany { get; set; }
         public decimal CompanyPrecentage { get; set; }
         public decimal CompanyAmount { get; set; }
+        public AccountResponse BaringCustomer { get; set; }
+        public decimal CustomerPrecentage { get; set; }
         public decimal CustomerAmount { get; set; }
         public decimal Time { get; set; }
         public AccountResponse Supplier { get; set; }//where to map
@@ -141,7 +143,8 @@ namespace BlueLotus360.Core.Domain.DTOs
             OrderType = new CodeBaseResponse();
             BaringPrinciple = new AccountResponse();
             BaringCompany = new AccountResponse();
-            Supplier=new AccountResponse();
+            BaringCustomer = new AccountResponse();
+            Supplier =new AccountResponse();
             ResourceAddress = new AddressResponse();
             AnalysisType1 = new CodeBaseResponse();
             AnalysisType2= new CodeBaseResponse();
