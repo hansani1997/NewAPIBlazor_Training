@@ -31,20 +31,29 @@ namespace BlueLotus360.Core.Domain.DTOs
         public int FromOrderKey { get; set; } = 1;
         public bool IsFromQuotation { get; set; }
         public string HeaderDescription { get; set; } = "";
-        public CodeBaseResponse OrderApproveState { get; set; }
-        public CodeBaseResponse OrderPrefix { get; set; }
-        public CodeBaseResponse OrderCategory1 { get; set; }
-        public CodeBaseResponse OrderCategory2 { get; set; }
-        public CodeBaseResponse OrderCategory3 { get; set; }
-        public CodeBaseResponse OrderStatus { get; set; }
-        public CodeBaseResponse OrderControlCondition { get; set; }
+        public CodeBaseResponse OrderApproveState { get; set; } = new CodeBaseResponse();
+        public CodeBaseResponse OrderPrefix { get; set; } = new CodeBaseResponse();
+        public CodeBaseResponse OrderCategory1 { get; set; } = new CodeBaseResponse();
+        public CodeBaseResponse OrderCategory2 { get; set; } = new CodeBaseResponse();
+        public CodeBaseResponse OrderCategory3 { get; set; } = new CodeBaseResponse();
+        public CodeBaseResponse OrderStatus { get; set; } = new CodeBaseResponse();
+        public CodeBaseResponse OrderControlCondition { get; set; } = new CodeBaseResponse();
         public ProjectResponse OrderProject { get; set; }
         public int Cd1Ky { get; set; } = 1;
         public decimal MeterReading { get; set; }
         public User EnteredUser { get; set; }
-        public AccountResponse Insurance { get; set; }
-        public CodeBaseResponse AddressCategory3 { get; set; }
+        public AccountResponse Insurance { get; set; } = new AccountResponse();
+        public CodeBaseResponse AddressCategory3 { get; set; }=new CodeBaseResponse();
         public bool IsIRNEstimateOrder { get; set; }
+        public AccountResponse BaringHeaderPrincipleAccount { get; set; } = new AccountResponse();
+        public decimal PrincipalPercentage { get; set; }
+        public decimal PrincipalAmount { get; set; }
+        public AccountResponse BaringHeaderCompanyAccount { get; set; } = new AccountResponse();
+        public decimal CompanyPercentage { get; set; }
+        public decimal CompanyAmount { get; set; }
+        public decimal CustomerPrecentage { get; set; }
+        public decimal CustomerAmount { get; set; }
+        public int OrderHeaderAccountKey { get; set; } = 1;
 
         public GenericOrder()
         {
@@ -69,7 +78,9 @@ namespace BlueLotus360.Core.Domain.DTOs
             EnteredUser = new User();
             Insurance = new AccountResponse();
             EnteredUser = new User();
-            AddressCategory3=new CodeBaseResponse();    
+            AddressCategory3=new CodeBaseResponse();
+            BaringHeaderPrincipleAccount = new AccountResponse();
+            BaringHeaderCompanyAccount = new AccountResponse();
         }
 
     }

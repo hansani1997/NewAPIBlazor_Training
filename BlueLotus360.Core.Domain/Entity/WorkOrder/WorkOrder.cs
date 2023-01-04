@@ -12,6 +12,10 @@ namespace BlueLotus360.Core.Domain.Entity.WorkOrder
 {
     public class WorkOrderAmountByAccount 
     {
+        public int OrderKey { get; set; } = 1;
+        public int TransactionKey { get; set; } = 1;
+        public int OrderHeaderAccountKey { get; set; } = 1;
+        public int TransactionHeaderAccountKey { get; set; } = 1;
         public int OrderDetailsAccountKey { get; set; } = 1;
         public int TransactionDetailsAccountKey { get; set; } = 1;
         public int LineNumber { get; set; }

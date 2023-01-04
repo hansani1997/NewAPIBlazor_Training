@@ -1868,6 +1868,68 @@ namespace BlueLotus360.Data.SQL92.Repository
             }
         }
 
+        public BaseServerResponse<WorkOrderAmountByAccount> TrnHeaderAccountInsertUpdate(Company company, User user, WorkOrderAmountByAccount accDet)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                IDataReader reader = null;
+                string SPName = "TrnHdrAcc_InsertUpdateWeb";
+                BaseServerResponse<WorkOrderAmountByAccount> response = new BaseServerResponse<WorkOrderAmountByAccount>();
+
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+
+                    dbCommand.CreateAndAddParameter("@Cky", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("@UsrKy", user.UserKey);
+                    dbCommand.CreateAndAddParameter("@ObjKy", accDet.ObjectKey);
+                    dbCommand.CreateAndAddParameter("@TrnHdrAccKy", accDet.TransactionHeaderAccountKey);
+                    dbCommand.CreateAndAddParameter("@TrnKy", accDet.TransactionKey);
+                    dbCommand.CreateAndAddParameter("@ControlConKy", accDet.ControlConKey);
+                    dbCommand.CreateAndAddParameter("@AccKy", BaseComboResponse.GetKeyValue(accDet.Account));
+                    dbCommand.CreateAndAddParameter("@AdrKy", BaseComboResponse.GetKeyValue(accDet.Address));
+                    dbCommand.CreateAndAddParameter("@LiNo", accDet.LineNumber);
+                    dbCommand.CreateAndAddParameter("@Val", accDet.Value);
+                    dbCommand.CreateAndAddParameter("@Amt", accDet.Amount);
+
+                    response.ExecutionStarted = DateTime.UtcNow;
+                    dbCommand.Connection.Open();
+                    reader = dbCommand.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+
+                    }
+
+                    response.ExecutionEnded = DateTime.UtcNow;
+                }
+                catch (Exception exp)
+                {
+                    throw exp;
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+                    if (reader != null && !reader.IsClosed)
+                    {
+                        reader.Close();
+                    }
+
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+                }
+
+                return response;
+            }
+        }
+
         public BaseServerResponse<WorkOrderAmountByAccount> TrnDetailAccountInsertUpdate(Company company, User user, WorkOrderAmountByAccount accDet)
         {
             using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
@@ -1930,6 +1992,72 @@ namespace BlueLotus360.Data.SQL92.Repository
             }
         }
 
+        public BaseServerResponse<IList<WorkOrderAmountByAccount>> TransactionHeaderAccountSelect(Company company, User user, WorkOrderAmountByAccount accDet)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                IDataReader reader = null;
+                string SPName = "TrnHdrAcc_SelectWeb";
+                BaseServerResponse<IList<WorkOrderAmountByAccount>> response = new BaseServerResponse<IList<WorkOrderAmountByAccount>>();
+                IList<WorkOrderAmountByAccount> list = new List<WorkOrderAmountByAccount>();
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+
+                    dbCommand.CreateAndAddParameter("@Cky", company.CompanyKey);
+                    dbCommand.CreateAndAddParameter("@UsrKy", user.UserKey);
+                    dbCommand.CreateAndAddParameter("@ObjKy", accDet.ObjectKey);
+                    dbCommand.CreateAndAddParameter("@TrnKy", accDet.TransactionKey);
+                    dbCommand.CreateAndAddParameter("@ControlConKy", accDet.ControlConKey);
+
+
+                    response.ExecutionStarted = DateTime.UtcNow;
+                    dbCommand.Connection.Open();
+                    reader = dbCommand.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        WorkOrderAmountByAccount obj = new WorkOrderAmountByAccount();
+
+                        obj.ControlConKey = reader.GetColumn<int>("ControlConKy");
+                        obj.TransactionHeaderAccountKey = reader.GetColumn<int>("TrnHdrAccKy");
+                        obj.Address = new AddressResponse() { AddressKey = reader.GetColumn<int>("AdrKy") };
+                        obj.Value = reader.GetColumn<decimal>("Value");
+                        obj.Amount = reader.GetColumn<decimal>("Amt");
+                        obj.Account = new AccountResponse() { AccountKey = reader.GetColumn<int>("AccKy") };
+                        obj.LineNumber = reader.GetColumn<int>("LiNo");
+                        list.Add(obj);
+                    }
+
+                    response.ExecutionEnded = DateTime.UtcNow;
+                    response.Value = list;
+                }
+                catch (Exception exp)
+                {
+                    throw exp;
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+                    if (reader != null && !reader.IsClosed)
+                    {
+                        reader.Close();
+                    }
+
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+                }
+
+                return response;
+            }
+        }
         public BaseServerResponse<IList<WorkOrderAmountByAccount>> TransactionDetailAccountSelect(Company company, User user, WorkOrderAmountByAccount accDet)
         {
             using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
@@ -1964,6 +2092,7 @@ namespace BlueLotus360.Data.SQL92.Repository
                         obj.Value = reader.GetColumn<decimal>("Value");
                         obj.Amount = reader.GetColumn<decimal>("Amt");
                         obj.Account = new AccountResponse() { AccountKey = reader.GetColumn<int>("AccKy") };
+                        obj.LineNumber = reader.GetColumn<int>("LiNo");
                         list.Add(obj);
                     }
 

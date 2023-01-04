@@ -34,5 +34,7 @@ namespace BlueLotus360.Core.Domain.Definitions.Repository
         RecviedAmountResponse GetRecviedAmountResponse(Company company, User user, RecieptDetailRequest request);
         BaseServerResponse<WorkOrderAmountByAccount> TrnDetailAccountInsertUpdate(Company company, User user, WorkOrderAmountByAccount accDet);
         BaseServerResponse<IList<WorkOrderAmountByAccount>> TransactionDetailAccountSelect(Company company, User user, WorkOrderAmountByAccount accDet);
+        BaseServerResponse<WorkOrderAmountByAccount> TrnHeaderAccountInsertUpdate(Company company, User user, WorkOrderAmountByAccount accDet);
+        BaseServerResponse<IList<WorkOrderAmountByAccount>> TransactionHeaderAccountSelect(Company company, User user, WorkOrderAmountByAccount accDet);
     }
 }
