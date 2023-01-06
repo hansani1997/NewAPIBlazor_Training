@@ -53,5 +53,6 @@ namespace BlueLotus360.Web.APIApplication.Definitions.ServiceDefinitions
         bool APIResponseDet_InsertWeb(ResponseDetails request);
         int GetPickMeOrderByOrderID(Company company, RequestParameters partnerOrder);
         bool UberMenu_DiscontinueWeb(UberDiscontinueItem request, Company company);
+        decimal GetOrderHubItemRateByItemKy(Company company, RequestParameters order);
     }
 }

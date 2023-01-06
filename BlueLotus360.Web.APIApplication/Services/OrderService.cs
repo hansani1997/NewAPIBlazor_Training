@@ -578,6 +578,11 @@ namespace BlueLotus360.Web.APIApplication.Services
         {
             return _unitOfWork.OrderRepository.UberMenu_DiscontinueWeb(request, company);
         }
-       
+
+        public decimal GetOrderHubItemRateByItemKy(Company company, RequestParameters order)
+        {
+            return _unitOfWork.OrderRepository.GetOrderHubItemRateByItemKy(company, order);
+        }
+        
     }
 }

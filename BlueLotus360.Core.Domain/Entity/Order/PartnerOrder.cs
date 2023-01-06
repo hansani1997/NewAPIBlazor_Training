@@ -201,6 +201,7 @@ namespace BlueLotus360.Core.Domain.Entity
         public int OrderTypeKey { get; set; }
         public string PlatformName { get; set; } = "";
         public string OrderID { get; set; } = "";
+        public int ItemKey { get; set; }
 
         public Pagination pagination { get; set; }
     }

@@ -3285,5 +3285,68 @@ namespace BlueLotus360.Data.SQL92.Repository
                 return isSuccess;
             }
         }
+
+        public decimal GetOrderHubItemRateByItemKy(Company company, RequestParameters order)
+        {
+            using (IDbCommand dbCommand = _dataLayer.GetCommandAccess())
+            {
+                IDataReader reader = null;
+                decimal ItemRate = 0;
+                string SPName = "GetOrderHubItemRateByItemKy";
+                try
+                {
+                    dbCommand.CommandType = CommandType.StoredProcedure;
+                    dbCommand.CommandText = SPName;
+                    dbCommand.CreateAndAddParameter("LocKy", order.LocationKey);
+                    dbCommand.CreateAndAddParameter("ItmKy", order.ItemKey);
+                    dbCommand.CreateAndAddParameter("CKy", company.CompanyKey);
+
+                    dbCommand.Connection.Open();
+                    reader = dbCommand.ExecuteReader();
+                    while (reader.Read())
+                    {
+
+                        ItemRate = reader.GetColumn<decimal>("Rate");
+
+
+                    }
+
+                    if (!reader.IsClosed)
+                    {
+                        reader.Close();
+                    }
+
+
+
+
+                }
+                catch (Exception exp)
+                {
+                    return 0;
+                }
+
+                finally
+                {
+                    IDbConnection dbConnection = dbCommand.Connection;
+                    if (reader != null)
+                    {
+                        if (!reader.IsClosed)
+                        {
+                            reader.Close();
+                        }
+                    }
+                    if (dbConnection.State != ConnectionState.Closed)
+                    {
+                        dbConnection.Close();
+                    }
+                    reader.Dispose();
+                    dbCommand.Dispose();
+                    dbConnection.Dispose();
+
+                }
+
+                return ItemRate;
+            }
+        }
     }
 }

@@ -810,5 +810,14 @@ namespace BlueLotus360.Web.API.Controllers
             return Ok(success);
         }
 
+        [HttpPost("GetOrderHubItemRateByItemKy")]
+        public IActionResult GetOrderHubItemRateByItemKy(RequestParameters request)
+        {
+            var company = Request.GetAssignedCompany();
+            decimal ItemRate = _orderService.GetOrderHubItemRateByItemKy(company, request);
+
+            return Ok(ItemRate);
+        }
+
     }
 }
