@@ -31,7 +31,9 @@ namespace BlueLotus360.Core.Domain.Definitions.Repository
         CodeBaseResponse OrderApproveStatusFindByOrdKy(Company company, User user, int objky, int ordky);
         BaseServerResponse<IList<GetFromQuotResults>> GenericRetrieveQuotation(GetFromQuoatationDTO request, Company company, User user);
         BaseServerResponse<IList<QuotationDetails>> GenericOpenQuotation(OrderOpenRequest request, Company company, User user);
+        BaseServerResponse<WorkOrderAmountByAccount> OrderHeaderAccountInsertUpdate(Company company, User user, WorkOrderAmountByAccount accDet);
         BaseServerResponse<WorkOrderAmountByAccount> OrderDetailAccountInsertUpdate(Company company, User user, WorkOrderAmountByAccount accDet);
+        BaseServerResponse<IList<WorkOrderAmountByAccount>> OrderHeaderAccountSelect(Company company, User user, WorkOrderAmountByAccount accDet);
         BaseServerResponse<IList<WorkOrderAmountByAccount>> OrderDetailAccountSelect(Company company, User user, WorkOrderAmountByAccount accDet);
         int PartnerOrders_Count(Company company, RequestParameters partnerOrder);
         BaseServerResponse<IList<PartnerOrder>> GetAllPartnerOrder(Company company, User user, RequestParameters order);

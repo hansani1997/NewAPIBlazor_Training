@@ -97,6 +97,53 @@ namespace BlueLotus360.Web.APIApplication.Services
             IList<OrderLineCreateDTO> orderLineItems = new List<OrderLineCreateDTO>();
             _unitOfWork.OrderRepository.CreateOrder(OH, company, user);
 
+            if (orderDetails.BaringHeaderCompanyAccount.AccountKey > 11)
+            {
+                WorkOrderAmountByAccount company_accdet = new WorkOrderAmountByAccount()
+                {
+                    OrderKey = OH.OrderKey,
+                    ObjectKey = orderDetails.FormObjectKey,
+                    Account = orderDetails.BaringHeaderCompanyAccount,
+                    Address = orderDetails.OrderCustomer,
+                    ControlConKey = orderDetails.OrderControlCondition.CodeKey,
+                    LineNumber = 1,
+                    Value = orderDetails.CompanyPercentage,
+                    Amount = orderDetails.CompanyAmount
+                };
+                _unitOfWork.OrderRepository.OrderHeaderAccountInsertUpdate(company, user, company_accdet);
+            }
+
+            if (orderDetails.BaringHeaderPrincipleAccount.AccountKey > 11)
+            {
+                WorkOrderAmountByAccount principle_accdet = new WorkOrderAmountByAccount()
+                {
+                    OrderKey = OH.OrderKey,
+                    ObjectKey = orderDetails.FormObjectKey,
+                    Account = orderDetails.BaringHeaderPrincipleAccount,
+                    Address = orderDetails.OrderCustomer,
+                    ControlConKey = orderDetails.OrderControlCondition.CodeKey,
+                    LineNumber = 2,
+                    Value = orderDetails.PrincipalPercentage,
+                    Amount = orderDetails.PrincipalAmount
+                };
+                _unitOfWork.OrderRepository.OrderHeaderAccountInsertUpdate(company, user, principle_accdet);
+            }
+            if (orderDetails.OrderAccount.AccountKey > 11)
+            {
+                WorkOrderAmountByAccount cus_accdet = new WorkOrderAmountByAccount()
+                {
+                    OrderKey = OH.OrderKey,
+                    ObjectKey = orderDetails.FormObjectKey,
+                    Account = orderDetails.OrderAccount,
+                    Address = orderDetails.OrderCustomer,
+                    ControlConKey = orderDetails.OrderControlCondition.CodeKey,
+                    LineNumber = 3,
+                    Value = orderDetails.CustomerPrecentage,
+                    Amount = orderDetails.CustomerAmount
+                };
+                _unitOfWork.OrderRepository.OrderHeaderAccountInsertUpdate(company, user, cus_accdet);
+            }
+
             if (orderDetails.OrderItems.Count() > 0)
             {
                 foreach (GenericOrderItem item in orderDetails.OrderItems)
@@ -160,7 +207,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                             Account = item.BaringCompany,
                             Address = new AddressResponse() { AddressKey = lineItem.AddressKey },
                             ControlConKey = orderDetails.OrderControlCondition.CodeKey,
-                            LineNumber = (int)lineItem.LineNumber,
+                            LineNumber = 1,
                             Value = item.CompanyPrecentage,
                             Amount = item.CompanyAmount
                         };
@@ -176,11 +223,26 @@ namespace BlueLotus360.Web.APIApplication.Services
                             Account = item.BaringPrinciple,
                             Address = new AddressResponse() { AddressKey = lineItem.AddressKey },
                             ControlConKey = orderDetails.OrderControlCondition.CodeKey,
-                            LineNumber = (int)(lineItem.LineNumber + 1),
+                            LineNumber = 2,
                             Value = item.PrinciplePrecentage,
                             Amount = item.PrincipleAmount
                         };
                         _unitOfWork.OrderRepository.OrderDetailAccountInsertUpdate(company, user, principle_accdet);
+                    }
+                    if (item.BaringCustomer.AccountKey > 11)
+                    {
+                        WorkOrderAmountByAccount cus_accdet = new WorkOrderAmountByAccount()
+                        {
+                            FromOrderDetailKey = lineItem.OrderLineItemKey,
+                            ObjectKey = lineItem.ObjectKey,
+                            Account = item.BaringCustomer,
+                            Address = new AddressResponse() { AddressKey = lineItem.AddressKey },
+                            ControlConKey = orderDetails.OrderControlCondition.CodeKey,
+                            LineNumber = 3,
+                            Value = item.CustomerPrecentage,
+                            Amount = item.CustomerAmount
+                        };
+                        _unitOfWork.OrderRepository.OrderDetailAccountInsertUpdate(company, user, cus_accdet);
                     }
                 }
             }
@@ -394,6 +456,56 @@ namespace BlueLotus360.Web.APIApplication.Services
 
             _unitOfWork.OrderRepository.UpdateGenericOrderHeader(OH, company, user);
 
+            if (orderDetails.BaringHeaderCompanyAccount.AccountKey > 11)
+            {
+                WorkOrderAmountByAccount company_accdet = new WorkOrderAmountByAccount()
+                {
+                    OrderHeaderAccountKey=orderDetails.OrderHeaderAccountKey,
+                    OrderKey = OH.OrderKey,
+                    ObjectKey = orderDetails.FormObjectKey,
+                    Account = orderDetails.BaringHeaderCompanyAccount,
+                    Address = orderDetails.OrderCustomer,
+                    ControlConKey = orderDetails.OrderControlCondition.CodeKey,
+                    LineNumber = 1,
+                    Value = orderDetails.CompanyPercentage,
+                    Amount = orderDetails.CompanyAmount
+                };
+                _unitOfWork.OrderRepository.OrderHeaderAccountInsertUpdate(company, user, company_accdet);
+            }
+
+            if (orderDetails.BaringHeaderPrincipleAccount.AccountKey > 11)
+            {
+                WorkOrderAmountByAccount principle_accdet = new WorkOrderAmountByAccount()
+                {
+                    OrderHeaderAccountKey = orderDetails.OrderHeaderAccountKey,
+                    OrderKey = OH.OrderKey,
+                    ObjectKey = orderDetails.FormObjectKey,
+                    Account = orderDetails.BaringHeaderPrincipleAccount,
+                    Address = orderDetails.OrderCustomer,
+                    ControlConKey = orderDetails.OrderControlCondition.CodeKey,
+                    LineNumber = 2,
+                    Value = orderDetails.PrincipalPercentage,
+                    Amount = orderDetails.PrincipalAmount
+                };
+                _unitOfWork.OrderRepository.OrderHeaderAccountInsertUpdate(company, user, principle_accdet);
+            }
+            if (orderDetails.OrderAccount.AccountKey > 11)
+            {
+                WorkOrderAmountByAccount cus_accdet = new WorkOrderAmountByAccount()
+                {
+                    OrderHeaderAccountKey = orderDetails.OrderHeaderAccountKey,
+                    OrderKey = OH.OrderKey,
+                    ObjectKey = orderDetails.FormObjectKey,
+                    Account = orderDetails.OrderAccount,
+                    Address = orderDetails.OrderCustomer,
+                    ControlConKey = orderDetails.OrderControlCondition.CodeKey,
+                    LineNumber = 3,
+                    Value = orderDetails.CustomerPrecentage,
+                    Amount = orderDetails.CustomerAmount
+                };
+                _unitOfWork.OrderRepository.OrderHeaderAccountInsertUpdate(company, user, cus_accdet);
+            }
+
 
             foreach (GenericOrderItem item in orderDetails.OrderItems)
             {
@@ -445,6 +557,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.ProjectKey= (int)orderDetails.OrderProject.ProjectKey;
                     lineItem.Description = item.Description;
                     lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
+                    lineItem.OrderDetailsAccountKey = item.OrderDetailsAccountKey;
                    // lineItem.FrmOrdDetKy = item.FromOrderDetKy;
 
 
@@ -491,6 +604,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.BussinessUnitKey = (int)item.BussinessUnit.CodeKey;
                     lineItem.Description = item.Description;
                     lineItem.ReserveAddressKey = (int)item.ResourceAddress.AddressKey;
+                    lineItem.OrderDetailsAccountKey = item.OrderDetailsAccountKey;
                     //lineItem.FrmOrdDetKy = item.FromOrderDetKy;
 
                     _unitOfWork.OrderRepository.CreateOrderLineItem(lineItem, company, user, new UIObject() { ObjectId = orderDetails.FormObjectKey });
@@ -500,12 +614,13 @@ namespace BlueLotus360.Web.APIApplication.Services
                 {
                     WorkOrderAmountByAccount company_accdet = new WorkOrderAmountByAccount()
                     {
+                        OrderDetailsAccountKey=lineItem.OrderDetailsAccountKey,
                         FromOrderDetailKey = lineItem.OrderLineItemKey,
                         ObjectKey = lineItem.ObjectKey,
                         Account = item.BaringCompany,
                         Address = new AddressResponse() { AddressKey = lineItem.AddressKey },
                         ControlConKey = orderDetails.OrderControlCondition.CodeKey,
-                        LineNumber = (int)lineItem.LineNumber,
+                        LineNumber = 1,
                         Value = item.CompanyPrecentage,
                         Amount = item.CompanyAmount
                     };
@@ -516,16 +631,33 @@ namespace BlueLotus360.Web.APIApplication.Services
                 {
                     WorkOrderAmountByAccount principle_accdet = new WorkOrderAmountByAccount()
                     {
+                        OrderDetailsAccountKey = lineItem.OrderDetailsAccountKey,
                         FromOrderDetailKey = lineItem.OrderLineItemKey,
                         ObjectKey = lineItem.ObjectKey,
                         Account = item.BaringPrinciple,
                         Address = new AddressResponse() { AddressKey = lineItem.AddressKey },
                         ControlConKey = orderDetails.OrderControlCondition.CodeKey,
-                        LineNumber = (int)(lineItem.LineNumber + 1),
+                        LineNumber = 2,
                         Value = item.PrinciplePrecentage,
                         Amount = item.PrincipleAmount
                     };
                     _unitOfWork.OrderRepository.OrderDetailAccountInsertUpdate(company, user, principle_accdet);
+                }
+                if (item.BaringCustomer.AccountKey > 11)
+                {
+                    WorkOrderAmountByAccount cus_accdet = new WorkOrderAmountByAccount()
+                    {
+                        OrderDetailsAccountKey = lineItem.OrderDetailsAccountKey,
+                        FromOrderDetailKey = lineItem.OrderLineItemKey,
+                        ObjectKey = lineItem.ObjectKey,
+                        Account = item.BaringCustomer,
+                        Address = new AddressResponse() { AddressKey = lineItem.AddressKey },
+                        ControlConKey = orderDetails.OrderControlCondition.CodeKey,
+                        LineNumber =3,
+                        Value = item.CustomerPrecentage,
+                        Amount = item.CustomerAmount
+                    };
+                    _unitOfWork.OrderRepository.OrderDetailAccountInsertUpdate(company, user, cus_accdet);
                 }
             }
 
@@ -738,6 +870,7 @@ namespace BlueLotus360.Web.APIApplication.Services
 
         public BaseServerResponse<WorkOrder> OpenWorkOrder(Company company, User user, OrderOpenRequest request)
         {
+            int controlConKy = 0;
             var ord = _unitOfWork.OrderRepository.GetGenericOrderByOrderKeyV2(request.OrderKey, company, user);
             OrderHeaderEditDTO responses = ord.Value;
 
@@ -748,7 +881,7 @@ namespace BlueLotus360.Web.APIApplication.Services
             order.OrderLocation = responses.OrderLocation;
             order.OrderCustomer = responses.OrderAdress;
             order.OrderRepAddress = responses.RepAdress;
-            order.OrderAccount = new AccountResponse();
+            order.OrderAccount = new AccountResponse() { AccountKey=responses.AccountKey};
             order.HeaderLevelDisountPrecentage = responses.DiscountPercentage;
             order.OrderKey = responses.OrderKey;
             order.OrderNumber = responses.OrderNumber.ToString();
@@ -764,10 +897,42 @@ namespace BlueLotus360.Web.APIApplication.Services
             order.OrderApproveState = _unitOfWork.OrderRepository.OrderApproveStatusFindByOrdKy(company, user, order.FormObjectKey, order.OrderKey);
             order.OrderCategory1 = responses.OrderCategory1;    
             order.OrderCategory2 = responses.OrderCategory2;
+            order.OrderCategory3= responses.OrderCategory3;
             order.OrderProject=new ProjectResponse() { ProjectKey=responses.ProjectKey};
             order.OrderStatus = responses.OrderStatus;
             order.MeterReading=responses.MeterReading;
             order.DeliveryDate=responses.DeliveryDate;
+
+            var concode = _unitOfWork.CodeBaseRepository.GetControlConditionCode(company, user, (int)request.ObjKy, "OrdDetAcc");
+            controlConKy = (int)concode.Value.CodeKey;
+
+            WorkOrderAmountByAccount accdet = new WorkOrderAmountByAccount()
+            {
+                OrderKey = order.OrderKey,
+                ObjectKey = (int)request.ObjKy,
+                ControlConKey = controlConKy,
+
+            };
+
+            var hdr = _unitOfWork.OrderRepository.OrderHeaderAccountSelect(company, user, accdet);
+            IList<WorkOrderAmountByAccount> hdr_list = hdr.Value;
+
+            WorkOrderAmountByAccount? hdracc1 = hdr_list.Where(x => x.LineNumber == 1).FirstOrDefault();
+            WorkOrderAmountByAccount? hdracc2 = hdr_list.Where(x => x.LineNumber == 2).FirstOrDefault();
+            WorkOrderAmountByAccount? hdracc3 = hdr_list.Where(x => x.LineNumber == 3).FirstOrDefault();
+
+            if (hdr_list.Count > 0)
+            {
+                order.OrderHeaderAccountKey = hdracc1 != null ? hdracc1.OrderHeaderAccountKey : 1;
+                order.BaringHeaderCompanyAccount = new AccountResponse() { AccountKey = hdracc1 != null ? hdracc1.Account.AccountKey : 1 };
+                order.CompanyPercentage = hdracc1 != null ? hdracc1.Value : 0;
+                order.CompanyAmount = hdracc1 != null ? hdracc1.Amount : 0;
+                order.BaringHeaderPrincipleAccount = new AccountResponse() { AccountKey = hdracc2 != null ? hdracc2.Account.AccountKey : 1 };
+                order.PrincipalPercentage = hdracc2 != null ? hdracc2.Value : 0;
+                order.PrincipalAmount = hdracc2 != null ? hdracc2.Amount : 0;
+                order.CustomerPrecentage = hdracc3 != null ? hdracc3.Value : 0;
+                order.CustomerAmount = hdracc3 != null ? hdracc3.Amount : 0;
+            }
 
             foreach (OrderLineCreateDTO item in itemList)
             {
@@ -812,8 +977,7 @@ namespace BlueLotus360.Web.APIApplication.Services
                     lineItem.AnalysisType2 = item.AnalysisType2;
 				    lineItem.AnalysisType4 = item.AnalysisType4;
 
-				var concode  = _unitOfWork.CodeBaseRepository.GetControlConditionCode(company, user, lineItem.ObjectKey, "OrdDetAcc");
-                    int controlConKy = (int)concode.Value.CodeKey;
+				    
 
                     WorkOrderAmountByAccount company_accdet = new WorkOrderAmountByAccount()
                     {
@@ -826,15 +990,22 @@ namespace BlueLotus360.Web.APIApplication.Services
                    var det=_unitOfWork.OrderRepository.OrderDetailAccountSelect(company,user, company_accdet);
                     IList<WorkOrderAmountByAccount> det_list = det.Value;
 
+                    WorkOrderAmountByAccount? acc1 = det_list.Where(x => x.LineNumber == 1).FirstOrDefault();
+                    WorkOrderAmountByAccount? acc2 = det_list.Where(x => x.LineNumber == 2).FirstOrDefault();
+                    WorkOrderAmountByAccount? acc3 = det_list.Where(x => x.LineNumber == 3).FirstOrDefault();
+
                     if (det_list.Count>0)
                     {
-                        lineItem.OrderDetailsAccountKey = det_list[0].OrderDetailsAccountKey;
-                        lineItem.BaringCompany = new AccountResponse() { AccountKey = det_list[0].Account.AccountKey };
-                        lineItem.CompanyPrecentage = det_list[0].Value;
-                        lineItem.CompanyAmount = det_list[0].Amount;
-                        lineItem.BaringPrinciple = new AccountResponse() { AccountKey = det_list[1].Account.AccountKey };
-                        lineItem.PrinciplePrecentage = det_list[1].Value;
-                        lineItem.PrincipleAmount = det_list[1].Amount;
+                        lineItem.OrderDetailsAccountKey = acc1 != null? acc1.OrderDetailsAccountKey:1;
+                        lineItem.BaringCompany = new AccountResponse() { AccountKey = acc1 != null ? acc1.Account.AccountKey:1 };
+                        lineItem.CompanyPrecentage = acc1 != null ? acc1.Value:0;
+                        lineItem.CompanyAmount = acc1 != null ? acc1.Amount:0;
+                        lineItem.BaringPrinciple = new AccountResponse() { AccountKey = acc2 != null ? acc2.Account.AccountKey:1 };
+                        lineItem.PrinciplePrecentage = acc2 != null ? acc2.Value:0;
+                        lineItem.PrincipleAmount = acc2 != null ? acc2.Amount:0;
+                        lineItem.BaringCustomer = new AccountResponse() { AccountKey = acc3 != null ? acc3.Account.AccountKey : 1 };
+                        lineItem.CustomerPrecentage = acc3 != null ? acc3.Value : 0;
+                        lineItem.CustomerAmount = acc3 != null ? acc3.Amount : 0;
                     }
                     
 
@@ -876,6 +1047,55 @@ namespace BlueLotus360.Web.APIApplication.Services
                 response=_unitOfWork.TransactionRepository.UpdateGenericTransaction(company, user, transaction);
             }
 
+            if (transaction.BaringCompany.AccountKey > 11)
+            {
+                WorkOrderAmountByAccount company_accdet = new WorkOrderAmountByAccount()
+                {
+                    TransactionHeaderAccountKey = transaction.TransactionHeaderAccountKey,
+                    TransactionKey = (int)transaction.TransactionKey,
+                    ObjectKey = transaction.ElementKey,
+                    Account = transaction.BaringCompany,
+                    Address = transaction.Address,
+                    ControlConKey = transaction.TransactionControlCondition.CodeKey,
+                    LineNumber = 1,
+                    Value = transaction.CompanyPrecentage,
+                    Amount = transaction.CompanyAmount
+                };
+                _unitOfWork.TransactionRepository.TrnHeaderAccountInsertUpdate(company, user, company_accdet);
+            }
+
+            if (transaction.BaringPrinciple.AccountKey > 11)
+            {
+                WorkOrderAmountByAccount principle_accdet = new WorkOrderAmountByAccount()
+                {
+                    TransactionHeaderAccountKey = transaction.TransactionHeaderAccountKey,
+                    TransactionKey = (int)transaction.TransactionKey,
+                    ObjectKey = transaction.ElementKey,
+                    Account = transaction.BaringPrinciple,
+                    Address = transaction.Address,
+                    ControlConKey = transaction.TransactionControlCondition.CodeKey,
+                    LineNumber = 2,
+                    Value = transaction.PrinciplePrecentage,
+                    Amount = transaction.PrincipleAmount
+                };
+                _unitOfWork.TransactionRepository.TrnHeaderAccountInsertUpdate(company, user, principle_accdet);
+            }
+            if (transaction.BaringCustomer.AccountKey > 11)
+            {
+                WorkOrderAmountByAccount cus_accdet = new WorkOrderAmountByAccount()
+                {
+                    TransactionHeaderAccountKey = transaction.TransactionHeaderAccountKey,
+                    TransactionKey = (int)transaction.TransactionKey,
+                    ObjectKey = transaction.ElementKey,
+                    Account = transaction.BaringCustomer,
+                    Address = transaction.Address,
+                    ControlConKey = transaction.TransactionControlCondition.CodeKey,
+                    LineNumber = 3,
+                    Value = transaction.CustomerPrecentage,
+                    Amount = transaction.CustomerAmount
+                };
+                _unitOfWork.TransactionRepository.TrnHeaderAccountInsertUpdate(company, user, cus_accdet);
+            }
             if (transaction.SerialNumber != null && !string.IsNullOrWhiteSpace(transaction.SerialNumber.SerialNumber))
             {
                 transaction.SerialNumber.TransactionKey = transaction.TransactionKey;
@@ -894,38 +1114,6 @@ namespace BlueLotus360.Web.APIApplication.Services
                 if (!line.IsPersisted)
                 {
                     _unitOfWork.TransactionRepository.SaveTransactionLineItem(company, user, line);
-
-                    //if (line.BaringCompany.AccountKey > 11)
-                    //{
-                    //    WorkOrderAmountByAccount company_accdet = new WorkOrderAmountByAccount()
-                    //    {
-                    //        FromOrderDetailKey = (int)line.ItemTransactionKey,
-                    //        ObjectKey = line.ElementKey,
-                    //        Account = line.BaringCompany,
-                    //        Address = new AddressResponse() { AddressKey = line.Address.AddressKey },
-                    //        ControlConKey = transaction.TransactionControlCondition.CodeKey,
-                    //        LineNumber = (int)line.LineNumber,
-                    //        Value = line.CompanyPrecentage,
-                    //        Amount = line.CompanyAmount
-                    //    };
-                    //    _unitOfWork.OrderRepository.OrderDetailAccountInsertUpdate(company, user, company_accdet);
-                    //}
-
-                    //if (line.BaringPrinciple.AccountKey > 11)
-                    //{
-                    //    WorkOrderAmountByAccount principle_accdet = new WorkOrderAmountByAccount()
-                    //    {
-                    //        FromOrderDetailKey = (int)line.ItemTransactionKey,
-                    //        ObjectKey = line.ElementKey,
-                    //        Account = line.BaringPrinciple,
-                    //        Address = new AddressResponse() { AddressKey = line.Address.AddressKey },
-                    //        ControlConKey = transaction.TransactionControlCondition.CodeKey,
-                    //        LineNumber = (int)line.LineNumber,
-                    //        Value = line.PrinciplePrecentage,
-                    //        Amount = line.PrincipleAmount
-                    //    };
-                    //    _unitOfWork.OrderRepository.OrderDetailAccountInsertUpdate(company, user, principle_accdet);
-                    //}
                 }
                 else if (line.IsPersisted && line.IsDirty)
                 {
@@ -945,7 +1133,57 @@ namespace BlueLotus360.Web.APIApplication.Services
                     }
                 }
 
-                
+                if (line.BaringCompany.AccountKey > 11)
+                {
+                    WorkOrderAmountByAccount company_accdet = new WorkOrderAmountByAccount()
+                    {
+                        TransactionDetailsAccountKey=line.TransactionDetailsAccountKey,
+                        FromItemTransactionKey = (int)line.ItemTransactionKey,
+                        ObjectKey = line.ElementKey,
+                        Account = line.BaringCompany,
+                        Address = new AddressResponse() { AddressKey = line.Address.AddressKey },
+                        ControlConKey = transaction.TransactionControlCondition.CodeKey,
+                        LineNumber = 1,
+                        Value = line.CompanyPrecentage,
+                        Amount = line.CompanyAmount
+                    };
+                    _unitOfWork.TransactionRepository.TrnDetailAccountInsertUpdate(company, user, company_accdet);
+                }
+
+                if (line.BaringPrinciple.AccountKey > 11)
+                {
+                    WorkOrderAmountByAccount principle_accdet = new WorkOrderAmountByAccount()
+                    {
+                        TransactionDetailsAccountKey = line.TransactionDetailsAccountKey,
+                        FromItemTransactionKey = (int)line.ItemTransactionKey,
+                        ObjectKey = line.ElementKey,
+                        Account = line.BaringPrinciple,
+                        Address = new AddressResponse() { AddressKey = line.Address.AddressKey },
+                        ControlConKey = transaction.TransactionControlCondition.CodeKey,
+                        LineNumber = 2,
+                        Value = line.PrinciplePrecentage,
+                        Amount = line.PrincipleAmount
+                    };
+                    _unitOfWork.TransactionRepository.TrnDetailAccountInsertUpdate(company, user, principle_accdet);
+                }
+                if (line.BaringCustomer.AccountKey > 11)
+                {
+                    WorkOrderAmountByAccount cus_accdet = new WorkOrderAmountByAccount()
+                    {
+                        TransactionDetailsAccountKey = line.TransactionDetailsAccountKey,
+                        FromItemTransactionKey = (int)line.ItemTransactionKey,
+                        ObjectKey = line.ElementKey,
+                        Account = line.BaringCustomer,
+                        Address = new AddressResponse() { AddressKey = line.Address.AddressKey },
+                        ControlConKey = transaction.TransactionControlCondition.CodeKey,
+                        LineNumber = 3,
+                        Value = line.CustomerPrecentage,
+                        Amount = line.CustomerAmount
+                    };
+                    _unitOfWork.TransactionRepository.TrnDetailAccountInsertUpdate(company, user, cus_accdet);
+                }
+
+
 
             }
             _unitOfWork.TransactionRepository.PostAfterTranSaveActions(company, user, transaction.TransactionKey, transaction.ElementKey);
@@ -959,11 +1197,83 @@ namespace BlueLotus360.Web.APIApplication.Services
             BLTransaction bltrn = trn.Value;
             CodeBaseResponse appr = _unitOfWork.TransactionRepository.TrnrApproveStatusFindByTrnKy(company,user, (int)request.ElementKey,(int)request.TransactionKey);
             bltrn.ApproveState = appr;
+
+            var concode = _unitOfWork.CodeBaseRepository.GetControlConditionCode(company, user, (int)request.ElementKey, "ItmTrnAcc");
+            int controlConKy = (int)concode.Value.CodeKey;
+
+            WorkOrderAmountByAccount company_accdet = new WorkOrderAmountByAccount()
+            {
+                TransactionKey = (int)bltrn.TransactionKey,
+                ObjectKey = request.ElementKey,
+                ControlConKey = controlConKy,
+
+            };
+
+            var det = _unitOfWork.TransactionRepository.TransactionHeaderAccountSelect(company, user, company_accdet);
+            IList<WorkOrderAmountByAccount> hdr_list = det.Value;
+
+            WorkOrderAmountByAccount? acc1 = hdr_list.Where(x => x.LineNumber == 1).FirstOrDefault();
+            WorkOrderAmountByAccount? acc2 = hdr_list.Where(x => x.LineNumber == 2).FirstOrDefault();
+            WorkOrderAmountByAccount? acc3 = hdr_list.Where(x => x.LineNumber == 3).FirstOrDefault();
+
+            if (hdr_list.Count > 0)
+            {
+                bltrn.TransactionHeaderAccountKey = acc1 != null ? acc1.TransactionHeaderAccountKey:1;
+                bltrn.BaringCompany = new AccountResponse() { AccountKey = acc1 != null ? acc1.Account.AccountKey : 1 };
+                bltrn.CompanyPrecentage = acc1 != null ? acc1.Value : 0;
+                bltrn.CompanyAmount = acc1 != null ? acc1.Amount : 0;
+                bltrn.BaringPrinciple = new AccountResponse() { AccountKey = acc2 != null ? acc2.Account.AccountKey : 1 };
+                bltrn.PrinciplePrecentage = acc2 != null ? acc2.Value : 0;
+                bltrn.PrincipleAmount = acc2 != null ? acc2.Amount : 0;
+                bltrn.BaringCustomer = new AccountResponse() { AccountKey = acc3 != null ? acc3.Account.AccountKey : 1 };
+                bltrn.CustomerPrecentage = acc3 != null ? acc3.Value : 0;
+                bltrn.CustomerAmount = acc3 != null ? acc3.Amount : 0;
+            }
+
             return new BaseServerResponse<BLTransaction>() { Value = bltrn, ExecutionStarted = trn.ExecutionStarted, ExecutionEnded = trn.ExecutionEnded, Messages = trn.Messages };
         }
         public BaseServerResponse<IList<GenericTransactionLineItem>> GetWorkOrderTransactionLineItems(Company company, User user, TransactionOpenRequest request)
         {
-            return _unitOfWork.TransactionRepository.GenericallyGetTransactionLineItemsV2(company, user, request);
+            var trnDet = _unitOfWork.TransactionRepository.GenericallyGetTransactionLineItemsV2(company, user, request);
+            IList<GenericTransactionLineItem> itmlist = trnDet.Value;  
+
+            var concode = _unitOfWork.CodeBaseRepository.GetControlConditionCode(company, user, (int)request.ElementKey, "ItmTrnAcc");
+            int controlConKy = (int)concode.Value.CodeKey;
+
+            foreach (var lineItem in itmlist)
+            {
+                WorkOrderAmountByAccount company_accdet = new WorkOrderAmountByAccount()
+                {
+                    FromItemTransactionKey = (int)lineItem.ItemTransactionKey,
+                    ObjectKey = request.ElementKey,
+                    ControlConKey = controlConKy,
+
+                };
+
+                var det = _unitOfWork.TransactionRepository.TransactionDetailAccountSelect(company, user, company_accdet);
+                IList<WorkOrderAmountByAccount> det_list = det.Value;
+
+                WorkOrderAmountByAccount? acc1 = det_list.Where(x => x.LineNumber == 1).FirstOrDefault();
+                WorkOrderAmountByAccount? acc2 = det_list.Where(x => x.LineNumber == 2).FirstOrDefault();
+                WorkOrderAmountByAccount? acc3 = det_list.Where(x => x.LineNumber == 3).FirstOrDefault();
+
+                if (det_list.Count > 0)
+                {
+                    lineItem.TransactionDetailsAccountKey = acc1 != null ? acc1.TransactionDetailsAccountKey : 1;
+                    lineItem.BaringCompany = new AccountResponse() { AccountKey = acc1 != null ? acc1.Account.AccountKey : 1 };
+                    lineItem.CompanyPrecentage = acc1 != null ? acc1.Value : 0;
+                    lineItem.CompanyAmount = acc1 != null ? acc1.Amount : 0;
+                    lineItem.BaringPrinciple = new AccountResponse() { AccountKey = acc2 != null ? acc2.Account.AccountKey : 1 };
+                    lineItem.PrinciplePrecentage = acc2 != null ? acc2.Value : 0;
+                    lineItem.PrincipleAmount = acc2 != null ? acc2.Amount : 0;
+                    lineItem.BaringCustomer = new AccountResponse() { AccountKey = acc3 != null ? acc3.Account.AccountKey : 1 };
+                    lineItem.CustomerPrecentage = acc3 != null ? acc3.Value : 0;
+                    lineItem.CustomerAmount = acc3 != null ? acc3.Amount : 0;
+                }
+
+               
+            }
+            return new BaseServerResponse<IList<GenericTransactionLineItem>>(){Value= itmlist ,Messages= trnDet.Messages};
         }
         public UserRequestValidation WorkorderValidation(WorkOrder dto, Company company, User user)
         {

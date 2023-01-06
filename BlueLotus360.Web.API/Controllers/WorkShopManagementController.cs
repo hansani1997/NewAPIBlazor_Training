@@ -87,8 +87,16 @@ namespace BlueLotus360.Web.API.Controllers
             var company = Request.GetAssignedCompany();
             var uiObject = _objectService.GetObjectByObjectKey(insurenceOrder.FormObjectKey);
 
-            var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
-            insurenceOrder.OrderType = ordTyp.Value;
+            if (insurenceOrder.IsIRNEstimateOrder) 
+            {
+                var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "IrnEst", "OrdTyp");
+                insurenceOrder.OrderType = ordTyp.Value;
+            }
+            else
+            {
+                var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
+                insurenceOrder.OrderType = ordTyp.Value;
+            }
 
             var ordsts = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, insurenceOrder.OrderStatus.OurCode, "PrcsFlow");
             insurenceOrder.OrderStatus = ordsts.Value;
@@ -127,8 +135,16 @@ namespace BlueLotus360.Web.API.Controllers
             var company = Request.GetAssignedCompany();
             var uiObject = _objectService.GetObjectByObjectKey(insurenceOrder.FormObjectKey);
 
-            var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
-            insurenceOrder.OrderType = ordTyp.Value;
+            if (insurenceOrder.IsIRNEstimateOrder)
+            {
+                var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "IrnEst", "OrdTyp");
+                insurenceOrder.OrderType = ordTyp.Value;
+            }
+            else
+            {
+                var ordTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, uiObject.Value.OurCode, "OrdTyp");
+                insurenceOrder.OrderType = ordTyp.Value;
+            }
 
             var ordsts = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, insurenceOrder.OrderStatus.OurCode, "PrcsFlow");
             insurenceOrder.OrderStatus = ordsts.Value;
@@ -164,11 +180,20 @@ namespace BlueLotus360.Web.API.Controllers
             var user = Request.GetAuthenticatedUser();
             var company = Request.GetAssignedCompany();
             var uiObject = _objectService.GetObjectByObjectKey(transaction.ElementKey);
-            var trnTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Sale", "TrnTyp");
-            transaction.TransactionType = trnTyp.Value;
-            //var trnControlCon = _codeBaseService.GetControlConditionCode(company, user, (int)transaction.ElementKey, "OrdDetAcc");
-            //transaction.TransactionControlCondition = trnControlCon.Value;
 
+            if (transaction.IsInsurance)
+            {
+                var trnTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "SALE4", "TrnTyp");
+                transaction.TransactionType = trnTyp.Value;
+                transaction.TransactionControlCondition = new CodeBaseResponse();
+            }
+            else
+            {
+                var trnTyp = _codeBaseService.GetCodeByOurCodeAndConditionCode(company, user, "Sale", "TrnTyp");
+                transaction.TransactionType = trnTyp.Value;
+                var trnControlCon = _codeBaseService.GetControlConditionCode(company, user, (int)transaction.ElementKey, "ItmTrnAcc");
+                transaction.TransactionControlCondition = trnControlCon.Value;
+            }
             var trn = _workshopManagementService.SaveWorkOrderTransaction(transaction, company, user, uiObject.Value);
             
             return Ok(trn.Value);

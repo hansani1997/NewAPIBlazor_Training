@@ -99,6 +99,17 @@ namespace BlueLotus360.Core.Domain.Entity.Transaction
         public decimal Quantity1 { get; set; }
         public CodeBaseResponse TransactionControlCondition { get; set; }=new CodeBaseResponse();
 
+        public bool IsInsurance { get; set; }
+        public AccountResponse BaringPrinciple { get; set; } = new AccountResponse();
+        public decimal PrinciplePrecentage { get; set; }
+        public decimal PrincipleAmount { get; set; }
+        public AccountResponse BaringCompany { get; set; } = new AccountResponse();
+        public decimal CompanyPrecentage { get; set; }
+        public decimal CompanyAmount { get; set; }
+        public AccountResponse BaringCustomer { get; set; } = new AccountResponse();
+        public decimal CustomerPrecentage { get; set; }
+        public decimal CustomerAmount { get; set; }
+        public int TransactionHeaderAccountKey { get; set; } = 1;
         public BLTransaction()
         {
             Location = new CodeBaseResponse();
@@ -108,6 +119,9 @@ namespace BlueLotus360.Core.Domain.Entity.Transaction
             YourReferenceDate = DateTime.Now;
             SerialNumber = new ItemSerialNumber();
             TransactionControlCondition = new CodeBaseResponse();
+            BaringPrinciple = new AccountResponse();
+            BaringCompany=new AccountResponse();
+            BaringCustomer=new AccountResponse();
         }
 
 
