@@ -181,6 +181,7 @@ namespace BlueLotus360.Web.API.Integrations.Uber
                         advanl.AddressId = uberOrder.Cart.Items[0].Eater_id;
                         advanl.AddressName = FullName;
                         advanl.Mobile = uberOrder.Eater.Phone;
+                        advanl.IsActive = 1;
                         AddressMaster adrmst = _addressService.CreateAdvanceAnalysis(company, advanl).Value;
                         saveUberOrder.Customer.AdrKy = Convert.ToInt32(adrmst.AddressKey);
                         saveUberOrder.Customer.Name = FullName;
