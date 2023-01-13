@@ -34,6 +34,7 @@ namespace BlueLotus360.Data.SQL92.UnitOfWork
         private IDocumentRepository _documentRepository;
         private IProjectRepository _projectRepository;
         private IBookingModuleRepository _bookingModuleRepository;
+        private IProfileRepository _profileRepository;
         #endregion
 
 
@@ -233,6 +234,19 @@ namespace BlueLotus360.Data.SQL92.UnitOfWork
                     _projectRepository = new ProjectRepository(_dataLayer);
                 }
                 return _projectRepository;
+            }
+        }
+
+        //ProfileRepo
+        public IProfileRepository ProfileRepository
+        {
+            get
+            {
+                if (_profileRepository == null)
+                {
+                    _profileRepository = new ProfileRepository(_dataLayer);
+                }
+                return _profileRepository;
             }
         }
 
